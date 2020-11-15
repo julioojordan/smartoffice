@@ -6,18 +6,18 @@
             Hai
           </a>
           <a href="javascript:void(0)" class="simple-text logo-normal">
-            Nama !
+            <?= $this->session->userdata('name'); ?> !
           </a>
         </div>
         <ul class="nav">
           <li class="<?= $dashboard_class; ?>">
-            <a href="./dashboard.html">
+            <a href="<?php echo base_url() . 'Dashboard' ?>">
               <i class="tim-icons icon-chart-pie-36"></i>
               <p>Dashboard</p> 
             </a>
           </li>
           <li class="<?= $myroom_class; ?>">
-            <a href="./icons.html">
+            <a href="<?php echo base_url() . 'MyRoom' ?>">
               <i class="tim-icons icon-tv-2"></i>
               <p>My Room</p>
             </a>
