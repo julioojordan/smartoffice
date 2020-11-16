@@ -22,7 +22,8 @@ class MyRoom extends CI_Controller {
 		$data['find_class'] = "";
 		$data['notif_class'] = "";
 		$data['profile_class'] = "";
-        $data['location'] = "My Room";
+		$data['access_class'] = "";
+    $data['location'] = "My Room";
         $data['devices']= $this->m_devices->getDevice($this->session->userdata('email'));
         $room = $this->m_rooms->getRoom($this->session->userdata('email'));
         $data['room_id'] = $room['room_id'];

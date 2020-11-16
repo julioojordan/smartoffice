@@ -25,7 +25,7 @@
               <li class="dropdown nav-item">
                 <a href="<?php echo base_url();?>Notification" class="nav-link">
                   <!-- class notification ini untuk memunculkan tanda titik merah -->
-                  <div class="notification d-none d-lg-block d-xl-block"></div> 
+                  <div class="d-none d-lg-block d-xl-block" id="notif_navbar"></div> 
                   <i class="tim-icons icon-bell-55"></i>
                   <p class="d-lg-none">
                     Notifications
@@ -39,7 +39,7 @@
                   </div>
                   <b class="caret d-none d-lg-block d-xl-block"></b>
                   <p class="d-lg-none">
-                    Log out
+                      Account
                   </p>
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">
@@ -53,15 +53,3 @@
           </div>
         </div>
       </nav>
-      <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <i class="tim-icons icon-simple-remove"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>

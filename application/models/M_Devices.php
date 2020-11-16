@@ -12,15 +12,15 @@ class M_Devices extends CI_Model
 
     function deleteDevice($id)
 	{
-		$this->db->query("DELETE FROM devices WHERE id = '$id'");
+		$this->db->query("DELETE FROM devices WHERE device_id = '$id'");
 	}
 
 	function updateStatus($id, $status)
 	{
 		if ($status == 1){
-			$this->db->query("UPDATE devices SET status = 1 WHERE id = '$id'");
+			$this->db->query("UPDATE devices SET status = 1 WHERE device_id = '$id'");
 		}else{
-			$this->db->query("UPDATE devices SET status = 0 WHERE id = '$id'");
+			$this->db->query("UPDATE devices SET status = 0 WHERE device_id = '$id'");
 		}
 		
 	}

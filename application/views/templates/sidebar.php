@@ -23,7 +23,7 @@
             </a>
           </li>
           <li class="<?= $find_class; ?>">
-            <a href="./map.html">
+            <a href="<?php echo base_url() . 'Find' ?>">
               <i class="tim-icons icon-zoom-split"></i>
               <p>Find</p>
             </a>
@@ -31,7 +31,13 @@
           <li class="<?= $notif_class; ?>">
             <a href="./notifications.html">
               <i class="tim-icons icon-bell-55"></i>
-              <p>Notifications</p>
+              <p>Notifications <span class="badge badge-danger" id="badges_notif"></span></p>
+            </a>
+          </li>
+          <li class="<?= $access_class; ?>">
+            <a href="./notifications.html">
+            <i class="tim-icons icon-controller"></i>
+              <p>Access</p>
             </a>
           </li>
           <li class="<?= $profile_class; ?>">

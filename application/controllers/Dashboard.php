@@ -21,6 +21,7 @@ class Dashboard extends CI_Controller {
 		$data['find_class'] = "";
 		$data['notif_class'] = "";
 		$data['profile_class'] = "";
+		$data['access_class'] = "";
 		$data['location'] = "Dashboard";
 
 		$data['devices'] = $this->m_devices->getDevice($this->session->userdata('email'));
@@ -46,11 +47,7 @@ class Dashboard extends CI_Controller {
 		
 		//update status ke tabel devices
 		$this->m_devices->updateStatus($device_id, $status);
-		if($this->m_devices->updateStatus($device_id, $status)){
-			$data="success";
-		}else{
-			$data="gagal";
-		}
+		
 		
 		echo json_encode($data);
 		

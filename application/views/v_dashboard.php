@@ -69,7 +69,7 @@
               <div class="card-header">
                 <h5 class="card-category">Device <?=$i?></h5>
                 <h3 class="card-title" style="text-transform: capitalize;"><i class="<?= $icon; ?>"></i> &nbsp; <?= $row['device_name'] ?></h3>
-                <input type="hidden" id="<?= $id2; ?>" value="<?= $row['id'] ?>">
+                <input type="hidden" id="<?= $id2; ?>" value="<?= $row['device_id'] ?>">
                 <input type="hidden" id="<?= $id3; ?>" value="<?= $row['room_id'] ?>">
               </div>
               <div class="card-body">
@@ -380,34 +380,8 @@
           </div>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <ul class="nav">
-            <li class="nav-item">
-              <a href="javascript:void(0)" class="nav-link">
-                Creative Tim
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="javascript:void(0)" class="nav-link">
-                About Us
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="javascript:void(0)" class="nav-link">
-                Blog
-              </a>
-            </li>
-          </ul>
-          <div class="copyright">
-            ©
-            <script>
-              document.write(new Date().getFullYear())
-            </script>2018 made with <i class="tim-icons icon-heart-2"></i> by
-            <a href="javascript:void(0)" target="_blank">Creative Tim</a> for a better web.
-          </div>
-        </div>
-      </footer>
+      <?php $this->load->view('templates/footer') ?>
+      
     </div>
   </div>
 
@@ -415,7 +389,7 @@
   <?php $this->load->view('templates/setting') ?>
 
   <!--   Core JS Files   -->
-  <?php $this->load->view('templates/footer') ?>
+  <?php $this->load->view('templates/script') ?>
 <!-- <script>
     $(document).ready(function() {
       var jam = 0
@@ -439,7 +413,7 @@
   </script> -->
 
    <!-- script check status -->
-   <!-- <script>
+   <script>
     var lock = document.getElementById("lock");
     var lamp = document.getElementById("lamp");
     var fan = document.getElementById("fan");
@@ -474,7 +448,7 @@
         });
       }, 1000);
     });
-  </script> -->
+  </script>
 
   <!-- Script for change status -->
     <script>
@@ -485,7 +459,7 @@
         if (lamp.checked == true){
           var status = 1;
           var device = 'lamp';
-          console.log('on');
+          //console.log('on');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -493,14 +467,14 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
         } else {
           var status = 0;
           var device = 'lamp';
-          console.log('off');
+          //console.log('off');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -508,7 +482,7 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
@@ -523,7 +497,7 @@
         if (fan.checked == true){
           var status = 1;
           var device = 'fan';
-          console.log('on');
+          //console.log('on');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -531,14 +505,14 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
         } else {
           var status = 0;
           var device = 'fan';
-          console.log('off');
+          //console.log('off');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -546,7 +520,7 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
@@ -561,7 +535,7 @@
         if (lock.checked == true){
           var status = 1;
           var device = 'lock';
-          console.log('unlocked');
+          //console.log('unlocked');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -569,14 +543,14 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
         } else {
           var status = 0;
           var device = 'lock';
-          console.log('locked');
+          //console.log('locked');
           $.ajax({
                 url:"<?php echo base_url();?>index.php/Dashboard/device",
                 method : "POST",
@@ -584,7 +558,7 @@
                 dataType : 'json',
                 success:function(data){
                   if (data != false){
-                      console.log(data);
+                      //console.log(data);
                   }
                 }
             });
