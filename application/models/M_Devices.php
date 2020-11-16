@@ -15,4 +15,18 @@ class M_Devices extends CI_Model
 		$this->db->query("DELETE FROM devices WHERE id = '$id'");
 	}
 
+	function updateStatus($id, $status)
+	{
+		if ($status == 1){
+			$this->db->query("UPDATE devices SET status = 1 WHERE id = '$id'");
+		}else{
+			$this->db->query("UPDATE devices SET status = 0 WHERE id = '$id'");
+		}
+		
+	}
+
+    function getStatus($room_id){
+		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result_array();
+	}
+
 }

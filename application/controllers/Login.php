@@ -16,6 +16,7 @@ class Login extends CI_Controller {
 	public function auth()
 	{
 		$this->load->model('m_login');
+		$this->load->model('m_rooms');
 		$email=htmlspecialchars($this->input->post('email',TRUE),ENT_QUOTES);
 		$password=htmlspecialchars($this->input->post('password',TRUE),ENT_QUOTES);
 		
@@ -27,9 +28,13 @@ class Login extends CI_Controller {
 			$name=$data['name'];
 			$email=$data['email'];
 			$status=$data['status1'];
+
+			$room_id = $this->m_rooms->getRoom($email);
+			$room_id = $room_id['room_id'];
 			$this->session->set_userdata('login', true);
 			$this->session->set_userdata('name', $name);
 			$this->session->set_userdata('email', $email);
+			$this->session->set_userdata('room_id', $room_id);
 			$this->session->set_userdata('status', $status);
 			$data = true;
 		}else{

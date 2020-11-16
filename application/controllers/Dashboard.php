@@ -9,7 +9,9 @@ class Dashboard extends CI_Controller {
       if($this->session->userdata('login') != TRUE){
         $url=base_url();
         redirect($url);
-      }
+	  }
+	  $this->load->model('m_devices');
+	  $this->load->model('m_log');
    	}
 
 	public function index()
@@ -20,7 +22,50 @@ class Dashboard extends CI_Controller {
 		$data['notif_class'] = "";
 		$data['profile_class'] = "";
 		$data['location'] = "Dashboard";
+
+		$data['devices'] = $this->m_devices->getDevice($this->session->userdata('email'));
 		$this->load->view('v_dashboard', $data);
+	}
+
+	public function device()
+	{
+		$device = $this->input->post('device');
+		$status = $this->input->post('status');
+		$device_id = $this->input->post('device_id');
+		$room_id= $this->input->post('room_id');
+		if ( function_exists( 'date_default_timezone_set' ) ){
+    		date_default_timezone_set('Asia/Jakarta');
+			$time = date("Y-m-d H:i:s");
+		}
+		$user = $this->session->userdata('email');
+
+		//isi lock kecuali kunci
+		if($device != 'lock'){
+			$this->m_log->addLogLamp($device_id, $time, $room_id, $user, $status);
+		}
+		
+		//update status ke tabel devices
+		$this->m_devices->updateStatus($device_id, $status);
+		if($this->m_devices->updateStatus($device_id, $status)){
+			$data="success";
+		}else{
+			$data="gagal";
+		}
+		
+		echo json_encode($data);
+		
+	}
+
+	public function get_last_status(){
+		$status = $this->m_devices->getStatus($this->session->userdata('room_id'));
+		$data = array();
+		foreach($status as $row){
+			array_push($data,$row['status']);
+		}
+
+		// data [0] = lock [1] = lamp [3] = fan
+		echo json_encode($data);
+
 	}
 
 }

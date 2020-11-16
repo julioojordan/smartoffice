@@ -18,6 +18,9 @@
   <link href="<?php echo base_url() . 'assets/dashboard/css/black-dashboard.css?v=1.0.0' ?>" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="<?php echo base_url() . 'assets/dashboard/demo/demo.css' ?>" rel="stylesheet" />
+  
+  <link href="<?php echo base_url() . 'assets/dashboard/css/check_button.css' ?>" rel="stylesheet" />
+  
 </head>
 <!--
         Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
@@ -32,33 +35,55 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="row">
+          <?php 
+              $i = 1;
+              foreach($devices as $row):
+                if($row['type'] == 1){ 
+                  $icon = "fas fa-key";
+                  $left = "<i class='fas fa-lock-open'></i>";
+                  $right = "<i class='fas fa-lock'></i>";
+                  $id = "lock";
+                  $id2 = "lock_id";
+                  $id3 = "lock_room_id";
+                  $click = "changeStatusLock()";
+                } elseif($row['type'] == 2){
+                  $icon = "far fa-lightbulb";
+                  $left = "On";
+                  $right = "Off";
+                  $id = "lamp";
+                  $id2 = "lamp_id";
+                  $id3 = "lamp_room_id";
+                  $click = "changeStatusLamp()";
+                }elseif($row['type'] == 3){
+                  $icon = "far fa-snowflake";
+                  $left = "On";
+                  $right = "Off";
+                  $id = "fan";
+                  $id2 = "fan_id";
+                  $id3 = "fan_room_id";
+                  $click = "changeStatusFan()";
+                }
+          ?>
           <div class="col-lg-4">
             <div class="card">
               <div class="card-header">
-                <h5 class="card-category">Device 1</h5>
-                <h3 class="card-title"><i class="far fa-lightbulb"></i> Lamp 1</h3>
+                <h5 class="card-category">Device <?=$i?></h5>
+                <h3 class="card-title" style="text-transform: capitalize;"><i class="<?= $icon; ?>"></i> &nbsp; <?= $row['device_name'] ?></h3>
+                <input type="hidden" id="<?= $id2; ?>" value="<?= $row['id'] ?>">
+                <input type="hidden" id="<?= $id3; ?>" value="<?= $row['room_id'] ?>">
               </div>
               <div class="card-body">
                 <div class="row" style="vertical-align: middle; text-align: center;">
                   <div class="col-lg-6 col-md-12">
-                    <i class="far fa-lightbulb fa-7x"></i>
+                    <i class="<?= $icon; ?> fa-7x"></i>
                   </div>
                   <div class="col-lg-6 col-md-12 my-auto">
                     <div id='timer'></div>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                      <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                        <input type="radio" name="options" checked>
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">On</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-single-02"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Off</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-tap-02"></i>
-                        </span>
+                    <div class="mid">
+                      <label class="rocker">
+                        <input type="checkbox" id="<?= $id; ?>" onclick="<?= $click; ?>">
+                        <span class="switch-left"><?= $left; ?></span>
+                        <span class="switch-right"><?= $right; ?></span>
                       </label>
                     </div>
                   </div>
@@ -66,74 +91,10 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-category">Device 2</h5>
-                <h3 class="card-title"><i class="far fa-snowflake"></i> Fan 1</h3>
-              </div>
-              <div class="card-body">
-                <div class="row" style="vertical-align: middle; text-align: center;">
-                  <div class="col-lg-6 col-md-12">
-                    <i class="far fa-snowflake fa-7x"></i>
-                  </div>
-                  <div class="col-lg-6 col-md-12 my-auto">
-                    <div id='timer'></div>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                      <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                        <input type="radio" name="options" checked>
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">On</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-single-02"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Off</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-tap-02"></i>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-category">Device 3</h5>
-                <h3 class="card-title"><i class="fas fa-key"></i> Lock 1</h3>
-              </div>
-              <div class="card-body">
-                <div class="row" style="vertical-align: middle; text-align: center;">
-                  <div class="col-lg-6 col-md-12">
-                    <i class="fas fa-key fa-7x"></i>
-                  </div>
-                  <div class="col-lg-6 col-md-12 my-auto">
-                    <div id='timer'></div>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                      <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                        <input type="radio" name="options" checked>
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">On</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-single-02"></i>
-                        </span>
-                      </label>
-                      <label class="btn btn-sm btn-primary btn-simple" id="2">
-                        <input type="radio" class="d-none" name="options">
-                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Off</span>
-                        <span class="d-block d-sm-none">
-                          <i class="tim-icons icon-tap-02"></i>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
+          <?php $i++;
+              endforeach;
+          ?>
         </div>
         <div class="row">
           <div class="col-lg-6 col-md-12">
@@ -455,7 +416,7 @@
 
   <!--   Core JS Files   -->
   <?php $this->load->view('templates/footer') ?>
-<script>
+<!-- <script>
     $(document).ready(function() {
       var jam = 0
       var detik = 57;
@@ -475,7 +436,165 @@
       }
         hitung();
     });
-  </script>
+  </script> -->
+
+   <!-- script check status -->
+   <!-- <script>
+    var lock = document.getElementById("lock");
+    var lamp = document.getElementById("lamp");
+    var fan = document.getElementById("fan");
+    $(document).ready(function() {
+      setInterval(function(){
+         $.ajax({
+            url:"<?php echo base_url();?>index.php/Dashboard/get_last_status",
+            dataType : 'json',
+            success:function(data){
+              //lock
+                if(data[0] == 1){
+                  lock.checked = true;
+                } else if (data[0] == 0){
+                  lock.checked = false;
+                }
+                
+                //lamp
+                if(data[1] == 1){
+                  lamp.checked = true;
+                } else if (data[1] == 0){
+                  lamp.checked = false;
+                }
+
+                //fan
+                if(data[2] == 1){
+                  fan.checked = true;
+                } else if (data[2] == 0){
+                  fan.checked = false;
+                }
+
+            }
+        });
+      }, 1000);
+    });
+  </script> -->
+
+  <!-- Script for change status -->
+    <script>
+      function changeStatusLamp(){
+        var lamp = document.getElementById("lamp");
+        var lamp_id = document.getElementById("lamp_id").value;
+        var lamp_room_id = document.getElementById("lamp_room_id").value;
+        if (lamp.checked == true){
+          var status = 1;
+          var device = 'lamp';
+          console.log('on');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: lamp_id, room_id: lamp_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        } else {
+          var status = 0;
+          var device = 'lamp';
+          console.log('off');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: lamp_id, room_id: lamp_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        }
+      }
+
+      function changeStatusFan(){
+        var fan = document.getElementById("fan");
+        var fan_id = document.getElementById("fan_id").value;
+        var fan_room_id = document.getElementById("fan_room_id").value;
+       
+        if (fan.checked == true){
+          var status = 1;
+          var device = 'fan';
+          console.log('on');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: fan_id, room_id: fan_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        } else {
+          var status = 0;
+          var device = 'fan';
+          console.log('off');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: fan_id, room_id: fan_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        }
+      }
+
+      function changeStatusLock(){
+        var lock = document.getElementById("lock");
+        var lock_id = document.getElementById("lock_id").value;
+        var lock_room_id = document.getElementById("lock_room_id").value;
+       
+        if (lock.checked == true){
+          var status = 1;
+          var device = 'lock';
+          console.log('unlocked');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        } else {
+          var status = 0;
+          var device = 'lock';
+          console.log('locked');
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Dashboard/device",
+                method : "POST",
+                data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      console.log(data);
+                  }
+                }
+            });
+        }
+      }
+
+    </script>
+  <!-- END Script for change status -->
+
+ 
   
 </body>
 
