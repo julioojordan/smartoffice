@@ -29,7 +29,7 @@
             </a>
           </li>
           <li class="<?= $notif_class; ?>">
-            <a href="./notifications.html">
+            <a href="<?php echo base_url() . 'Notification' ?>">
               <i class="tim-icons icon-bell-55"></i>
               <p>Notifications <span class="badge badge-danger" id="badges_notif"></span></p>
             </a>

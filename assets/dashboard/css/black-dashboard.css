@@ -20442,4 +20442,9 @@ Copyright (c) 2015 Daniel Eden
   padding-right: 0;
 }
 
+.scroll-card {
+  max-height: 1000px;
+  overflow-y: auto;
+}
+
 /*# sourceMappingURL=dashboard-free.css.map */
