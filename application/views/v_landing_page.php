@@ -178,5 +178,6 @@ http://www.templatemo.com/tm-474-app-landing
         <script src="<?php echo base_url() . 'assets/landingpage/js/jquery.parallax.js' ?>"></script>
         <!-- template mo config script -->
         <script src="<?php echo base_url() . 'assets/landingpage/js/templatemo_scripts.js' ?>"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     </body>
 </html>

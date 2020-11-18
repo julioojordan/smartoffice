@@ -24,7 +24,7 @@ class M_Rooms extends CI_Model
 	function getAllRooms1($email)
 	{
 		return $this->db->query("SELECT * FROM rooms 
-		JOIN user ON rooms.owner = user.email WHERE owner<>'$email'")->result();
+		JOIN user ON rooms.owner = user.email WHERE owner<>'$email' ORDER BY user.status1 DESC, rooms.room_id ASC")->result();
 		
 	}
 	

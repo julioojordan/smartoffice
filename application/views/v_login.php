@@ -110,9 +110,9 @@
                 dataType : 'json',
                 success:function(data){
                 console.log(data);
-					if (data != false){ // data not found
+					if (data == 'success'){ // data not found
 						window.location.href = "<?php echo base_url();?>Dashboard";
-					}else{
+					}else if(data == 'failed'){
 						
                         Swal.fire({
 							icon: 'error',
@@ -120,7 +120,15 @@
 							text: 'Account Not Found !',
 							footer: '<a href="<?php echo base_url() . 'Login/signup' ?>"> Sign Up Now !</a>'
 						});
-                    }
+                    }else if(data=='server_on'){
+						window.location.href = "<?php echo base_url();?>ServerControl";
+					}else if(data=='server_off'){
+						Swal.fire({
+							icon: 'error',
+							title: 'Cannot Login At This Time',
+							text: 'Server is not Ready !'
+						});
+					}
                     
                 }
             });

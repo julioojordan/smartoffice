@@ -21,8 +21,22 @@ class MessageControl extends CI_Controller {
     }
     
     public function get_last_message(){
+
+          $check = $this->m_messages->getUnreplied($this->session->userdata('email'), 1, 0);
+          if ( function_exists( 'date_default_timezone_set' ) ){
+              date_default_timezone_set('Asia/Jakarta');
+              $now = date("Y-m-d H:i:s");
+        }
+        foreach($check as $row ){
+            $time = $row['time'];
+            $time = strtotime('+30 minutes', strtotime($time)); //if in 10 minutes not replied then the message will be auto declined
+            $time = date('Y-m-d H:i:', $time);
+            if($now > $time){// reqeust with older time will be updated to decline nad status to reply
+                $this->m_messages->updateUnreplied($row['id'], 3, 1);
+            }
+        }
         $data = $this->m_messages->getUnrepliedLast($this->session->userdata('email'));
-		echo json_encode($data);
+		    echo json_encode($data);
 
 	}
 
