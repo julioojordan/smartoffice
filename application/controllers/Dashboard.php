@@ -12,6 +12,7 @@ class Dashboard extends CI_Controller {
 	  }
 	  $this->load->model('m_devices');
 	  $this->load->model('m_log');
+	  $this->load->model('m_user');
    	}
 
 	public function index()
@@ -40,15 +41,18 @@ class Dashboard extends CI_Controller {
 		}
 		$user = $this->session->userdata('email');
 
-		//isi lock kecuali kunci
+		//inserting log table except for device type = lock
 		if($device != 'lock'){
 			$this->m_log->addLogLamp($device_id, $time, $room_id, $user, $status);
+			//update status to  devices table
+			$this->m_devices->updateStatus($device_id, $status);
+		}else{
+			$this->m_devices->updateStatusLock($device_id);
 		}
-		
-		//update status ke tabel devices
-		$this->m_devices->updateStatus($device_id, $status);
-		
-		
+
+		//update last status user so that they're not recognized as idle by server
+		$this->m_user->updateStatus1User1($this->session->userdata('email'), $time);
+
 		echo json_encode($data);
 		
 	}
