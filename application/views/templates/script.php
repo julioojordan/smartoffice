@@ -177,6 +177,15 @@
                   }
               });
           }, 1000);
+
+          //for checking whenever user is operating the website so that their last_login_status will change
+          $.ajax({
+              url:"<?php echo base_url();?>index.php/MessageControl/change_last_user_status",
+              dataType : 'json',
+              success:function(data){
+                  console.log('online');
+              }
+          });
         
     });
 

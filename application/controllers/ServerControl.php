@@ -38,9 +38,9 @@ class ServerControl extends CI_Controller {
 
         foreach($check as $row ){
             $time = $row['last_login_time'];
-            $time = strtotime('+14 minutes', strtotime($time)); //if in 10 minutes user not doing anything then their status will be chenged to idle / 2
+            $time = strtotime($time) + 600; //if in 10 minutes user not doing anything then their status will be chenged to idle / 1
             $time = date('Y-m-d H:i:', $time);
-            if($now > $time){// reqeust with older time will be updated to decline nad status to reply
+            if($now > $time){//
                 $this->m_user->updateStatus1User($row['email']);
                 if($this->m_user->updateStatus1User($row['email'])){
                   $data = true;

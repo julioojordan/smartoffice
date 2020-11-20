@@ -25,6 +25,12 @@ class M_Devices extends CI_Model
 		
 	}
 
+	function updateStatusLock($id)
+	{
+		$this->db->query("UPDATE devices SET status = status + 1 WHERE device_id = '$id'");
+		
+	}
+
     function getStatus($room_id){
 		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result_array();
 	}

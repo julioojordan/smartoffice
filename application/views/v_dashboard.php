@@ -79,13 +79,19 @@
                   </div>
                   <div class="col-lg-6 col-md-12 my-auto">
                     <div id='timer'></div>
-                    <div class="mid">
-                      <label class="rocker">
-                        <input type="checkbox" id="<?= $id; ?>" onclick="<?= $click; ?>">
-                        <span class="switch-left"><?= $left; ?></span>
-                        <span class="switch-right"><?= $right; ?></span>
-                      </label>
-                    </div>
+                    <?php if ($row['type'] != 1) : ?>
+                      <div class="mid">
+                        <label class="rocker">
+                          <input type="checkbox" id="<?= $id; ?>" onclick="<?= $click; ?>">
+                          <span class="switch-left"><?= $left; ?></span>
+                          <span class="switch-right"><?= $right; ?></span>
+                        </label>
+                      </div>
+                    <?php else: ?>
+                      <div class="mid">
+                      <button type="button" class="btn btn-fill btn-primary btn-sm" onclick="changeStatusLock()"><i class='fas fa-lock-open'>&nbsp; Unlock</i></button>
+                      </div>
+                    <?php endif;?>
                   </div>
                 </div>
               </div>
@@ -414,7 +420,6 @@
 
    <!-- script check status -->
    <script>
-    var lock = document.getElementById("lock");
     var lamp = document.getElementById("lamp");
     var fan = document.getElementById("fan");
     $(document).ready(function() {
@@ -424,11 +429,11 @@
             dataType : 'json',
             success:function(data){
               //lock
-                if(data[0] == 1){
-                  lock.checked = true;
-                } else if (data[0] == 0){
-                  lock.checked = false;
-                }
+                // if(data[0] == 1){
+                //   lock.checked = true;
+                // } else if (data[0] == 0){
+                //   lock.checked = false;
+                // }
                 
                 //lamp
                 if(data[1] == 1){
@@ -528,41 +533,38 @@
       }
 
       function changeStatusLock(){
-        var lock = document.getElementById("lock");
         var lock_id = document.getElementById("lock_id").value;
         var lock_room_id = document.getElementById("lock_room_id").value;
-       
-        if (lock.checked == true){
-          var status = 1;
-          var device = 'lock';
+        var status = null;
+        var device = 'lock';
           //console.log('unlocked');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
-        } else {
-          var status = 0;
-          var device = 'lock';
-          //console.log('locked');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
-        }
+        $.ajax({
+            url:"<?php echo base_url();?>index.php/Dashboard/device",
+            method : "POST",
+            data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
+            dataType : 'json',
+            success:function(data){
+              if (data != false){
+                  //console.log(data);
+              }
+            }
+        }); 
+        // else {
+        //   var status = 0;
+        //   var device = 'lock';
+        //   //console.log('locked');
+        //   $.ajax({
+        //         url:"<?php echo base_url();?>index.php/Dashboard/device",
+        //         method : "POST",
+        //         data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
+        //         dataType : 'json',
+        //         success:function(data){
+        //           if (data != false){
+        //               //console.log(data);
+        //           }
+        //         }
+        //     });
+        // }
       }
 
     </script>

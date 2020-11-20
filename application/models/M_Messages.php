@@ -34,9 +34,10 @@ class M_Messages extends CI_Model
 	
 	function getUnreplied($email, $message, $reply_status)
 	{
-		return $this->db->query("SELECT * FROM messages 
+		$query = $this->db->query("SELECT * FROM messages 
 		JOIN user ON messages.u_from = user.email
-		WHERE u_to ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC")->result_array();
+		WHERE u_to ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		return $query;
 	}
 	
 	function updateUnreplied($id, $message, $reply_status)
@@ -51,7 +52,8 @@ class M_Messages extends CI_Model
 		WHERE (u_from LIKE '%$keyword%' OR user.name LIKE '%$keyword%') AND (u_to ='$email' AND reply_status = '$reply_status' AND message = '$message') ORDER BY time DESC");
 		return $query;
 		
-    }
+	}
+	
 
 
 }
