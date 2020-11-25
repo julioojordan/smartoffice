@@ -15,5 +15,12 @@ class M_User extends CI_Model
 	function updateStatus1User1($email, $time)
 	{
 		$this->db->query("UPDATE user SET status1 = 2, last_login_time = '$time' WHERE email ='$email'");
+	}
+	
+	//chekcing data user from their id
+	function getDataUser($id)
+	{
+		$query=  $this->db->query("SELECT * FROM user WHERE user_id =$id");
+		return $query;
     }
 }

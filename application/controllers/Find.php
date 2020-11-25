@@ -56,7 +56,7 @@ class Find extends CI_Controller {
 			$time = date("Y-m-d H:i:s");
 		}
 
-        $check = $this->m_messages->checkMessage($this->session->userdata('email'), 1);
+        $check = $this->m_messages->checkMessage($u_to, $this->session->userdata('email'), 1);
 
         if ($check != 0){ //already sending request
             // $get_message = $this->m_messages->getMessage($this->session->userdata('email'), 1);

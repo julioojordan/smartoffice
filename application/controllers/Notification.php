@@ -11,6 +11,8 @@ class Notification extends CI_Controller {
         redirect($url);
 	  }
 	  $this->load->model('m_messages');
+	  $this->load->model('m_token');
+	  $this->load->model('m_user');
    	}
 
 	public function index()
@@ -123,5 +125,22 @@ class Notification extends CI_Controller {
             $data = false;
         }
         echo json_encode($data);
+    }
+
+
+    public function give_access()
+    {
+        $id_user_from = $this->input->post('id_user_from');
+        $id_message = $this->input->post('id_message');
+        $room_id = $this->session->userdata('room_id');
+        $user = $this->m_user->getDataUser($id_user_from)->row_array();
+        $email = $user['email'];
+        $token = random_string('sha1');
+
+        $this->m_token->addToken($token, $room_id, $email);
+        $this->m_messages->updateGranted($id_message, 2, 1);
+
+        $data = true;
+        echo json_encode($id_message);
     }
 }

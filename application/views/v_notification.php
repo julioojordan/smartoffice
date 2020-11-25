@@ -58,7 +58,7 @@
                                                     <p style="font-weight: bold;"> Email : <?= $row['u_from']?> </p>
                                                 </div>
                                                 <div class="col-lg-6 col-md-12 my-auto">
-                                                    <button type="button" class="btn btn-fill btn-info btn-sm" onclick="give('<?php echo $row['u_from']; ?>')"><i class="tim-icons icon-controller"></i> Give Access</button>
+                                                    <button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess(<?php echo $row['user_id']; ?>, <?php echo $row['id']; ?>)"><i class="tim-icons icon-controller"></i> Give Access</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,6 +67,7 @@
                                 <?php $i++; endforeach; ?>
                             </div>
                             <div class="row" id="result2" style="display: none;">
+
                             </div>
                         </div>
                     </div>
@@ -187,7 +188,7 @@
                             var i = 1;
                             if (data != false){
                                 $.each(data, function(key,val){
-                                    content += "<div class='col-md-12'><div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Request "+i+ "<span style='color:grey; text-align: right;'> " + val.time+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> User : "+val.name+"</p><p style='font-weight: bold;'> Email : "+val.u_from+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='give('"+val.u_from+"')'><i class='tim-icons icon-controller'></i> Give Access</button></div></div></div></div></div>";
+                                    content += "<div class='col-md-12'><div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Request "+i+ "<span style='color:grey; text-align: right;'> " + val.time+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> User : "+val.name+"</p><p style='font-weight: bold;'> Email : "+val.u_from+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='giveAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Give Access</button></div></div></div></div></div>";
                                     i++;
                                 });
                                 result2.innerHTML = content;
@@ -291,7 +292,7 @@
                 var counter_0 = 1;
                 if (data != false){
                     $.each(data, function(key,val){
-                        content_3 += "<div class='col-md-12'><div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Request "+counter_0+ "<span style='color:grey; text-align: right;'> " + val.time+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> User : "+val.name+"</p><p style='font-weight: bold;'> Email : "+val.u_from+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='give('"+val.u_from+"')'><i class='tim-icons icon-controller'></i> Give Access</button></div></div></div></div></div>";
+                        content_3 += '<div class="col-md-12"><div class="card"><div class="card-header"><h4 class="card-title" style="font-weight:bold;">Request '+counter_0+ '<span style="color:grey; text-align: right;"> ' + val.time+'</span></h4></div><div class="card-body"><div class="row" style="vertical-align: middle;"><div class="col-lg-6 col-md-12"><p style="font-weight: bold;"> User : '+val.name+'</p><p style="font-weight: bold;"> Email : '+val.u_from+'</p></div><div class="col-lg-6 col-md-12 my-auto"><button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess('+val.user_id+' ,'+val.id+')"><i class="tim-icons icon-controller"></i> Give Access</button></div></div></div></div></div>';
                         counter_0++;
                     });
                     result.innerHTML = content_3;
@@ -343,36 +344,41 @@
         });
       }, 1000);
     });
-  </script>
+</script>
 
 <script>
-    function give(request_email)
+    function giveAccess(id_user_from, id_message)
     {
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/Notification/request",
-            method : "POST",
-            data: {room_id: room_id},
-            dataType : 'json',
-            success:function(data){
-                if(data == true){ //never asking for a request
-                    Swal.fire(
-                        'Request Has been Sent',
-                        'Please Wait for The Owner to Giving you Access!',
-                        'success'
-                    )
-                }else{
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Oops...',
-                        text: 'You have already requesting access to this room!',
-                        footer: '<a href="<?php echo base_url();?>Notification">See Notification</a>'
-                    });
-                }
-                         
+        //console.log(id_user_from);
+        Swal.fire({
+            title: 'Attention',
+            text: "Are You Sure Want To Give Your Room Access ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Give'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url:"<?php echo base_url();?>Notification/give_access",
+                    method : "POST",
+                    data: {id_user_from: id_user_from, id_message: id_message},
+                    dataType : 'json',
+                    success:function(data){
+                        //window.location.reload();
+                        Swal.fire(
+                            'Success',
+                            'Access Given ! ',
+                            'success'
+                        )
+                    }
+                });  
             }
         });
     }
 </script>
+
 </body>
 
 </html>

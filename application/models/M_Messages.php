@@ -1,9 +1,9 @@
 <?php
 class M_Messages extends CI_Model
 {
-	function checkMessage($email, $status)
+	function checkMessage($u_to, $email, $status)
 	{
-		return $this->db->query("SELECT * FROM messages WHERE u_from ='$email' AND message = $status")->num_rows();
+		return $this->db->query("SELECT * FROM messages WHERE u_from ='$email' AND message = $status AND u_to ='$u_to'")->num_rows();
 		
     }
     
@@ -18,8 +18,8 @@ class M_Messages extends CI_Model
 		$this->db->query("INSERT INTO messages (u_from, u_to, message, time)
         VALUES ('$u_from', '$u_to', 1, '$time')");
 		
-    }
-
+	}
+	
     function countUnreplied($email)
 	{
 		return $this->db->query("SELECT * FROM messages WHERE u_to ='$email' AND reply_status = 0")->num_rows();
@@ -44,6 +44,11 @@ class M_Messages extends CI_Model
 	{
 		$this->db->query("UPDATE messages SET message= $message, reply_status = $reply_status WHERE id ='$id' ");
 	}
+
+	function updateGranted($id, $message, $reply_status)
+	{
+		$this->db->query("UPDATE messages SET message= $message, reply_status = $reply_status WHERE id ='$id'");
+	}
 	
 	function searchMessages($keyword, $email, $message, $reply_status)
 	{
@@ -53,7 +58,6 @@ class M_Messages extends CI_Model
 		return $query;
 		
 	}
-	
 
 
 }
