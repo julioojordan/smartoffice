@@ -15,6 +15,61 @@
   <script src="<?php echo base_url() . 'assets/dashboard/demo/demo.js' ?>"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="<?php echo base_url() . 'assets/modules/datatables/jquery.dataTables.js' ?>"></script>
+    <script src="<?php echo base_url() . 'assets/modules/datatables-bs4/js/dataTables.bootstrap4.js' ?>"></script>
+    <script>
+        $(function() {
+            $("#example1").DataTable();
+            $('#table-1').DataTable({
+                "paging": false,
+                // "pageLength": 10,
+                // "ajax":           '/api/data',
+                // "scrollY":        500,
+                "scrollX": true,
+                "deferRender":    true,
+                "scrollCollapse": true,
+                "responsive": true,
+                "lengthMenu": [10, 20, 30, 40, 50],
+                "searching": true,
+
+                "info": true,
+                "autoWidth": false
+                // "search": {
+                //     "addClass": 'form-control input-sm col-lg-12'
+                // },
+            });
+            $('#table-2').DataTable({
+                "paging": true,
+                // "pageLength": 10,
+                // "ajax":           '/api/data',
+                // "scrollY":        500,
+                "scrollX": true,
+                // "deferRender":    true,
+                "scrollCollapse": true,
+                // "responsive": true,
+                // "lengthMenu": [10],
+                "searching": false,
+
+                "info": true,
+                "autoWidth": true
+            });
+            $('#table-3').DataTable({
+                "paging": true,
+                // "pageLength": 10,
+                // "ajax":           '/api/data',
+                // "scrollY":        500,
+                "scrollX": true,
+                // "deferRender":    true,
+                "scrollCollapse": true,
+                // "responsive": true,
+                // "lengthMenu": [10],
+                "searching": false,
+
+                "info": true,
+                "autoWidth": true
+            });
+        });
+    </script>
 
   <script>
     $(document).ready(function() {

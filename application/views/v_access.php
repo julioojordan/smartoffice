@@ -18,6 +18,9 @@
   <link href="<?php echo base_url() . 'assets/dashboard/css/black-dashboard.css?v=1.0.0' ?>" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="<?php echo base_url() . 'assets/dashboard/demo/demo.css' ?>" rel="stylesheet" />
+  
+  <link href="<?php echo base_url() . 'assets/dashboard/css/check_button.css' ?>" rel="stylesheet" />
+  
 </head>
 <!--
         Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
@@ -30,61 +33,55 @@
       <!-- Navbar -->
       <?php $this->load->view('templates/navbar') ?>
       <!-- End Navbar -->
-        <div class="content">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="card ">
-                        <div class="card-header">
-                            <input type="text" class="form-control" id="search" name="search" placeholder="SEARCH ROOM" style="background-color: white; color: black; font-weight: 800;" autocomplete = off>
-                        </div>
-                        <div class="card-body" id="result">
-                            <div class="row">
-                                <?php 
-                                    foreach($rooms as $row) :
-                                    if($row['status1'] == 0){//offline
-                                        $dot = "grey";
-                                        $k1 = "Offline";
-                                    } elseif($row['status1'] == 1){
-                                        $dot = "yellow";
-                                        $k1 = "Idle";
-                                    } elseif($row['status1'] == 2){
-                                        $dot = "green";
-                                        $k1 = "Online";
-                                    }
-                                ?>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title" style="font-weight:bold;">Room Id #<span style="color:grey;"><?= $row['room_id']?></span></h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row" style="vertical-align: middle; text-align: center;">
-                                                <div class="col-lg-6 col-md-12">
-                                                    <p style="font-weight: bold;"> Owner : <?= $row['name']?> </p>
-                                                    <p> <i class="fas fa-circle" style="color: <?= $dot;?>;"></i> <?= $k1;?> </p>
-                                                    <?php if($row['status1'] == 2) : ?>
-                                                    <p><?= $row['status2'];?></p> 
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="col-lg-6 col-md-12 my-auto">
-                                                    <button type="button" class="btn btn-fill btn-info btn-sm" onclick="request('<?php echo $row['room_id']; ?>')"><i class="tim-icons icon-controller"></i> Request Access</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                        <div class="card-body" id="result2" style="display: none;">
-                        </div>
-                    </div>
+      <div class="content">
+        <div class="row">
+          <div class="col-lg-12 col-md-12">
+            <div class="card ">
+              <div class="card-header">
+                <h4 class="card-title"> Your Access to Other's Rooms </h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table tablesorter" id = "table-1" width=100%>
+                    <thead class=" text-primary">
+                      <tr>
+                        <th style="text-align:center;"> No </th>
+                        <th style="text-align:center;"> Room Id </th>
+                        <th style="text-align:center;"> Owner </th>
+                        <th style="text-align:center;"> Action </th>
+                      </tr>
+                    </thead>
+                    <tbody id="table_body_access">
+                        <?php if($access):
+                            $i = 1;
+                            foreach($access as $row):
+                        ?>
+                            <tr>
+                                <td style="text-align:center;"><?=$i?></td>
+                                <td style="text-align:center;"><?=$row['room_id']?></td>
+                                <td style="text-align:center;"><?=$row['name']?></td>
+                                <td style="text-align:center;"><a href='<?php echo base_url();?>Access/rooms/<?=$row['token']?>'><button type='button' class='btn btn-fill btn-info btn-sm'><i class='tim-icons icon-controller'>&nbsp; Access</i></button></a></td>
+                            </tr>
+                        <?php
+                            $i++;
+                            endforeach;
+                            else:
+                        ?>
+                            <tr>
+                                <td style="text-align:center;" colspan="4">You Have no Access to other's Rooms</td>
+                            </tr>
+                        <?php endif; ?>
+
+                    </tbody>
+                  </table>
                 </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <?php $this->load->view('templates/footer') ?>
+      
     </div>
   </div>
 
@@ -94,117 +91,53 @@
   <!--   Core JS Files   -->
   <?php $this->load->view('templates/script') ?>
 
-  <!-- Script for searching -->
-  <script>
-        $(document).ready(function(){
-            var result =  document.getElementById("result");
-            var result2 =  document.getElementById("result2");
-            var dot = "";
-            var k1 = "";
-            $("#search").keyup(function(){
-                if($("#search").val().length>1){
-                    result.style.display = "none";
-                    result2.style.display = "block";
-                    $.ajax({
-                        url:"<?php echo base_url();?>index.php/Find/search",
-                        method : "POST",
-                        data: 'search='+$("#search").val(),
-                        dataType : 'json',
-                        success:function(data){
-                            //console.log(data);
-                            if (data != false){
-                                $.each(data, function(key,val){
-                                    if (val.status1 == 0){
-                                        dot = "grey";
-                                        k1 = "Offline";
-                                        result2.innerHTML = "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                                    }else if (val.status1 == 1){
-                                        dot = "yellow";
-                                        k1 = "Idle";
-                                        result2.innerHTML = "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                                    }else if(val.status1 == 2){
-                                        dot = "green";
-                                        k1 = "Online";
-                                        result2.innerHTML = "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+val.status2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                                    }
-                                });
-                            } else{ //data tidak ditemukan
-                                result2.innerHTML = "<br><p style='text-align: center; font-weight: bold;'> No Rooms Found ! </p>"
-                            }
-                            
-                        }
-                    });
-                }else{
-                    result.style.display = "block";
-                    result2.style.display = "none";
-                }
-            });
-        });
-      
-</script>
+   <!-- script check status -->
+   <script>
 
-    <!-- END Script for searching -->
-
-<!-- Script auto  -->
-<!-- <script>
-    var result =  document.getElementById("result");
     $(document).ready(function() {
       setInterval(function(){
-         $.ajax({
-            url:"<?php echo base_url();?>index.php/Find/auto",
-            dataType : 'json',
-            success:function(data){
-                result.innerHTML ="";
-                $.each(data, function(key,val){
-                    if (val.status1 == 0){
-                        dot = "grey";
-                        k1 = "Offline";
-                        result.innerHTML += "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                    }else if (val.status1 == 1){
-                        dot = "yellow";
-                        k1 = "Idle";
-                        result.innerHTML += "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                    }else if(val.status1 == 2){
-                        dot = "green";
-                        k1 = "Online";
-                        result.innerHTML += "<div class='col-lg-4 col-md-6'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+val.status2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request('"+val.room_id+"')'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
-                    }
-                });
 
-            }
-        });
+        //guest
+        // $.ajax({
+        //     url:"<?php echo base_url();?>index.php/Dashboard/auto_guest",
+        //     dataType : 'json',
+        //     success:function(data){
+        //         if (data == false){//no guest
+        //             table_body_guest.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Guest</td>"
+        //         }else{
+        //             table_body_guest.innerHTML = "";
+        //             var i = 1;
+        //             $.each(data, function(key,val){
+        //               table_body_guest.innerHTML += "<tr><td style='text-align:center;'>"+i+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'>"+val.user_email+"</td></tr>";
+        //               i++ ;
+        //             });
+        //         }
+        //     }
+        // });
+
+        //access
+        // $.ajax({
+        //     url:"<?php echo base_url();?>index.php/Dashboard/auto_access",
+        //     dataType : 'json',
+        //     success:function(data){
+        //         if (data == false){//no guest
+        //             table_body_access.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Access to other's Rooms</td>"
+        //         }else{
+        //             table_body_access.innerHTML = "";
+        //             var j = 1;
+        //             $.each(data, function(key,val){
+        //               table_body_access.innerHTML += "<tr><td style='text-align:center;'>"+j+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'><a href='<?php echo base_url();?>index.php/Access/rooms/"+val.token+"'><button type='button' class='btn btn-fill btn-info btn-sm'><i class='tim-icons icon-controller'>&nbsp; Access</i></button></a></td></tr>";
+        //               j++ ;
+        //             });
+        //         }
+        //     }
+        // });
       }, 1000);
     });
-  </script> -->
+  </script>
 
-<script>
-    function request(room_id)
-    {
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/Find/request",
-            method : "POST",
-            data: {room_id: room_id},
-            dataType : 'json',
-            success:function(data){
-                if(data == true){ //never asking for a request
-                    Swal.fire(
-                        'Request Has been Sent',
-                        'Please Wait for The Owner to Giving you Access!',
-                        'success'
-                    )
-                }else{
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Oops...',
-                        text: 'You have already requesting access to this room!',
-                        footer: '<a href="<?php echo base_url();?>Notification">See Notification</a>'
-                    });
-                }
-                         
-            }
-        });
-    }
-</script>
+ 
+  
 </body>
 
 </html>

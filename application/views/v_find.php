@@ -194,12 +194,22 @@
                         'success'
                     )
                 }else{
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Oops...',
-                        text: 'You have already requesting access to this room!',
-                        footer: '<a href="<?php echo base_url();?>Notification">See Notification</a>'
-                    });
+                    if(data == "ASRequest"){
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Oops...',
+                            text: 'You have already requesting access to this room!',
+                            footer: '<a href="<?php echo base_url();?>Notification">See Notification</a>'
+                        });
+                    }else if(data == "AHAccess"){
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Attention',
+                            text: 'You still have access to this room!',
+                            footer: '<a href="<?php echo base_url();?>Access">See Access</a>'
+                        });
+                    }
+                    
                 }
                          
             }

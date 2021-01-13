@@ -39,6 +39,15 @@ class M_Messages extends CI_Model
 		WHERE u_to ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
 		return $query;
 	}
+
+	//access request
+	function getUnrepliedRequest($email, $message, $reply_status)
+	{
+		$query = $this->db->query("SELECT * FROM messages 
+		JOIN user ON messages.u_from = user.email
+		WHERE u_from ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		return $query;
+	}
 	
 	function updateUnreplied($id, $message, $reply_status)
 	{
@@ -46,6 +55,11 @@ class M_Messages extends CI_Model
 	}
 
 	function updateGranted($id, $message, $reply_status)
+	{
+		$this->db->query("UPDATE messages SET message= $message, reply_status = $reply_status WHERE id ='$id'");
+	}
+
+	function updateDeclined($id, $message, $reply_status)
 	{
 		$this->db->query("UPDATE messages SET message= $message, reply_status = $reply_status WHERE id ='$id'");
 	}

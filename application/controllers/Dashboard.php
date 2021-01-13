@@ -13,6 +13,7 @@ class Dashboard extends CI_Controller {
 	  $this->load->model('m_devices');
 	  $this->load->model('m_log');
 	  $this->load->model('m_user');
+	  $this->load->model('m_token');
    	}
 
 	public function index()
@@ -26,6 +27,7 @@ class Dashboard extends CI_Controller {
 		$data['location'] = "Dashboard";
 
 		$data['devices'] = $this->m_devices->getDevice($this->session->userdata('email'));
+		
 		$this->load->view('v_dashboard', $data);
 	}
 
@@ -67,6 +69,28 @@ class Dashboard extends CI_Controller {
 		// data [0] = lock [1] = lamp [3] = fan
 		echo json_encode($data);
 
+	}
+
+	public function auto_guest(){
+		//guest that still have access to your room
+		if($this->m_token->getGuest($this->session->userdata('room_id'), 1)->num_rows() != 0){
+			$data = $this->m_token->getGuest($this->session->userdata('room_id'), 1)->result_array();
+		}else{//no access to other's rooms
+			$data = false;
+		}
+		echo json_encode($data);
+
+		
+	}
+
+	public function auto_access(){
+		//your access to other's rooms
+		if($this->m_token->getAccess($this->session->userdata('email'), 1)->num_rows() != 0){
+			$data = $this->m_token->getAccess($this->session->userdata('email'), 1)->result_array();
+		}else{//no access to other's rooms
+			$data = false;
+		}
+		echo json_encode($data);
 	}
 
 }

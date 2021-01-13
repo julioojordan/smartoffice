@@ -35,7 +35,7 @@
             </a>
           </li>
           <li class="<?= $access_class; ?>">
-            <a href="./notifications.html">
+            <a href="<?php echo base_url() . 'Access' ?>">
             <i class="tim-icons icon-controller"></i>
               <p>Access</p>
             </a>

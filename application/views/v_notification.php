@@ -59,6 +59,7 @@
                                                 </div>
                                                 <div class="col-lg-6 col-md-12 my-auto">
                                                     <button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess(<?php echo $row['user_id']; ?>, <?php echo $row['id']; ?>)"><i class="tim-icons icon-controller"></i> Give Access</button>
+                                                    <button type="button" class="btn btn-fill btn-danger btn-sm" onclick="declineAccess(<?php echo $row['user_id']; ?>, <?php echo $row['id']; ?>)"><i class="tim-icons icon-controller"></i> Decline Access</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -188,7 +189,7 @@
                             var i = 1;
                             if (data != false){
                                 $.each(data, function(key,val){
-                                    content += "<div class='col-md-12'><div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Request "+i+ "<span style='color:grey; text-align: right;'> " + val.time+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> User : "+val.name+"</p><p style='font-weight: bold;'> Email : "+val.u_from+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='giveAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Give Access</button></div></div></div></div></div>";
+                                    content += "<div class='col-md-12'><div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Request "+i+ "<span style='color:grey; text-align: right;'> " + val.time+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> User : "+val.name+"</p><p style='font-weight: bold;'> Email : "+val.u_from+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='giveAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Give Access</button><button type='button' class='btn btn-fill btn-danger btn-sm' onclick='declineAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Decline Access</button></div></div></div></div></div>";
                                     i++;
                                 });
                                 result2.innerHTML = content;
@@ -292,7 +293,7 @@
                 var counter_0 = 1;
                 if (data != false){
                     $.each(data, function(key,val){
-                        content_3 += '<div class="col-md-12"><div class="card"><div class="card-header"><h4 class="card-title" style="font-weight:bold;">Request '+counter_0+ '<span style="color:grey; text-align: right;"> ' + val.time+'</span></h4></div><div class="card-body"><div class="row" style="vertical-align: middle;"><div class="col-lg-6 col-md-12"><p style="font-weight: bold;"> User : '+val.name+'</p><p style="font-weight: bold;"> Email : '+val.u_from+'</p></div><div class="col-lg-6 col-md-12 my-auto"><button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess('+val.user_id+' ,'+val.id+')"><i class="tim-icons icon-controller"></i> Give Access</button></div></div></div></div></div>';
+                        content_3 += '<div class="col-md-12"><div class="card"><div class="card-header"><h4 class="card-title" style="font-weight:bold;">Request '+counter_0+ '<span style="color:grey; text-align: right;"> ' + val.time+'</span></h4></div><div class="card-body"><div class="row" style="vertical-align: middle;"><div class="col-lg-6 col-md-12"><p style="font-weight: bold;"> User : '+val.name+'</p><p style="font-weight: bold;"> Email : '+val.u_from+'</p></div><div class="col-lg-6 col-md-12 my-auto"><button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess('+val.user_id+' ,'+val.id+')"><i class="tim-icons icon-controller"></i> Give Access</button><button type='button' class='btn btn-fill btn-danger btn-sm' onclick='declineAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Decline Access</button></div></div></div></div></div>';
                         counter_0++;
                     });
                     result.innerHTML = content_3;
@@ -370,6 +371,37 @@
                         Swal.fire(
                             'Success',
                             'Access Given ! ',
+                            'success'
+                        )
+                    }
+                });  
+            }
+        });
+    }
+
+    function declineAccess(id_user_from, id_message)
+    {
+        //console.log(id_user_from);
+        Swal.fire({
+            title: 'Attention',
+            text: "Are You Sure Want To Decline This Room Access ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Decline'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url:"<?php echo base_url();?>Notification/decline_access",
+                    method : "POST",
+                    data: {id_user_from: id_user_from, id_message: id_message},
+                    dataType : 'json',
+                    success:function(data){
+                        //window.location.reload();
+                        Swal.fire(
+                            'Success',
+                            'Access Declined ! ',
                             'success'
                         )
                     }

@@ -9,9 +9,10 @@ class Access extends CI_Controller {
         $url=base_url();
         redirect($url);
       }
-
-      $this->load->model('m_rooms');
-      $this->load->model('m_messages');
+      $this->load->model('m_token');
+      $this->load->model('m_devices');
+      $this->load->model('m_log');
+      $this->load->model('m_user');
    	}
       
 
@@ -19,67 +20,80 @@ class Access extends CI_Controller {
 	{	
 		$data['dashboard_class'] = "";
 		$data['myroom_class'] = "";
-		$data['find_class'] = "active";
+		$data['find_class'] = "";
 		$data['notif_class'] = "";
 		$data['profile_class'] = "";
         $data['location'] = "Access";
+        $data['access_class'] = "active";
+        
+        //your access to other's rooms
+		$data['access'] = $this->m_token->getAccess($this->session->userdata('email'), 1)->result_array();
+		$this->load->view('v_access', $data);
+    }
+
+    public function rooms($token)
+    {
+        $data['dashboard_class'] = "";
+		$data['myroom_class'] = "";
+		$data['find_class'] = "";
+		$data['notif_class'] = "";
+		$data['profile_class'] = "";
+        $data['location'] = "Guest Access";
 		$data['access_class'] = "active";
-        $room = $this->m_rooms->getRoom($this->session->userdata('email'));
-        $data['room_id'] = $room['room_id'];
+		
+		//get room devices
+		$data['devices'] = $this->m_devices->getGuestDevice($token);
+		
+		//save the token
+		$data['token'] = $token;
 
-        $data['rooms'] = $this->m_rooms->getAllRooms($this->session->userdata('email'));
-		$this->load->view('v_find', $data);
+		// get expiration time
+		$data['expired'] = $this->m_token->getToken($token)->row_array();
+		$data['expired'] = $data['expired']['valid'];
+        $this->load->view('v_guest', $data);
     }
 
-    public function search()
-    {
-        $keyword = $this->input->post('search');
-        $search = $this->m_rooms->searchRoom($keyword, $this->session->userdata('email'));
-
-        if ($search->num_rows() != 0) {
-			$data=$search->result();
-		}else{ //tidak ditemukan
-            $data = false;
-        }
-
-        echo json_encode($data);
-    }
-
-    public function request()
-    {
-        $room_id = $this->input->post('room_id');
-        $room_data =  $this->m_rooms->getRoom1($room_id);
-        $u_to = $room_data['owner'];
-
-        if ( function_exists( 'date_default_timezone_set' ) ){
+    public function device()
+	{
+		$device = $this->input->post('device');
+		$status = $this->input->post('status');
+		$device_id = $this->input->post('device_id');
+		$room_id= $this->input->post('room_id');
+		if ( function_exists( 'date_default_timezone_set' ) ){
     		date_default_timezone_set('Asia/Jakarta');
 			$time = date("Y-m-d H:i:s");
 		}
+		$user = $this->session->userdata('email');
 
-        $check = $this->m_messages->checkMessage($this->session->userdata('email'), 1);
+		//inserting log table except for device type = lock
+		if($device != 'lock'){
+			$this->m_log->addLogLamp($device_id, $time, $room_id, $user, $status);
+			//update status to  devices table
+			$this->m_devices->updateStatus($device_id, $status);
+		}else{
+			$this->m_devices->updateStatusLock($device_id);
+		}
 
-        if ($check != 0){ //already sending request
-            // $get_message = $this->m_messages->getMessage($this->session->userdata('email'), 1);
-            // $time = $get_message['time'];
-            // $data = array();
-            // array_push($data, $hour);
-            // array_push($data, $minute);
-            // array_push($data, $second);
-            $data = false;
-        }else{
-            $this->m_messages->sendRequest($this->session->userdata('email'), $u_to, $time);
-            $data = true;
-        }
+		//update last status user so that they're not recognized as idle by server
+		$this->m_user->updateStatus1User1($this->session->userdata('email'), $time);
 
-        echo json_encode($data);
+		echo json_encode($data);
+		
+	}
 
+	public function get_last_status(){
+        $token = $this->input->post('token');
+        $room = $this->m_token->getToken($token)->row_array();
+        $room_id = $room['room_id'];
+		$status = $this->m_devices->getStatus($room_id);
+		$data = array();
+		foreach($status as $row){
+			array_push($data,$row['status']);
+		}
 
-    }
+		// data [0] = lock [1] = lamp [3] = fan
+		echo json_encode($data);
 
-    public function auto()
-    {
-        $data = $this->m_rooms->getAllRooms1($this->session->userdata('email'));
-        echo json_encode($data);
-    }
+	}
 
 }

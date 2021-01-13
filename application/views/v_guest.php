@@ -34,7 +34,10 @@
       <?php $this->load->view('templates/navbar') ?>
       <!-- End Navbar -->
       <div class="content">
-        <div class="row">
+        <div class="alert alert-info text-center" role="alert" id="expired_time">
+            
+        </div>
+        <div class="row" id="guest_devices">
           <?php 
               $i = 1;
               foreach($devices as $row):
@@ -102,54 +105,8 @@
               endforeach;
           ?>
         </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> Active Guest </h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter ">
-                    <thead class=" text-primary">
-                      <tr>
-                        <th style="text-align:center;"> No </th>
-                        <th style="text-align:center;"> User ID </th>
-                        <th style="text-align:center;"> Name </th>
-                        <th style="text-align:center;"> Email </th>
-                      </tr>
-                    </thead>
-                    <tbody id="table_body_guest">
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> Access to Other's Rooms </h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter ">
-                    <thead class=" text-primary">
-                      <tr>
-                        <th style="text-align:center;"> No </th>
-                        <th style="text-align:center;"> Room Id </th>
-                        <th style="text-align:center;"> Owner </th>
-                        <th style="text-align:center;"> Action </th>
-                      </tr>
-                    </thead>
-                    <tbody id="table_body_access">
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="row" id="expired" style = "display : none">
+              <h3 style = "text-align: center"> Your Access to This Room Has Expired </hr>
         </div>
       </div>
       <?php $this->load->view('templates/footer') ?>
@@ -162,39 +119,19 @@
 
   <!--   Core JS Files   -->
   <?php $this->load->view('templates/script') ?>
-<!-- <script>
-    $(document).ready(function() {
-      var jam = 0
-      var detik = 57;
-      var menit = 59;
-      function hitung() {
-        setTimeout(hitung,1000);
-        $('#timer').html( jam + ' hours ' + menit + ' minutes ' + detik + ' seconds ');
-        detik ++;
-        if(detik > 59) {
-            detik = 0;
-            menit ++;
-          if(menit > 59) {
-            jam ++;
-            menit = 0; 
-          }
-        }
-      }
-        hitung();
-    });
   </script> -->
 
    <!-- script check status -->
    <script>
     var lamp = document.getElementById("lamp");
     var fan = document.getElementById("fan");
-    var table_body_guest = document.getElementById("table_body_guest");
-    var table_body_access = document.getElementById("table_body_access");
 
     $(document).ready(function() {
       setInterval(function(){
          $.ajax({
             url:"<?php echo base_url();?>index.php/Dashboard/get_last_status",
+            method : "POST",
+            data: {token: <?=$token?>},
             dataType : 'json',
             success:function(data){
               //lock
@@ -218,42 +155,6 @@
                   fan.checked = false;
                 }
 
-            }
-        });
-
-        //guest
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/Dashboard/auto_guest",
-            dataType : 'json',
-            success:function(data){
-                if (data == false){//no guest
-                    table_body_guest.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Guest</td>"
-                }else{
-                    table_body_guest.innerHTML = "";
-                    var i = 1;
-                    $.each(data, function(key,val){
-                      table_body_guest.innerHTML += "<tr><td style='text-align:center;'>"+i+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'>"+val.user_email+"</td></tr>";
-                      i++ ;
-                    });
-                }
-            }
-        });
-
-        //access
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/Dashboard/auto_access",
-            dataType : 'json',
-            success:function(data){
-                if (data == false){//no guest
-                    table_body_access.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Access to other's Rooms</td>"
-                }else{
-                    table_body_access.innerHTML = "";
-                    var j = 1;
-                    $.each(data, function(key,val){
-                      table_body_access.innerHTML += "<tr><td style='text-align:center;'>"+j+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'><a href='<?php echo base_url();?>index.php/Access/rooms/"+val.token+"'><button type='button' class='btn btn-fill btn-info btn-sm'><i class='tim-icons icon-controller'>&nbsp; Access</i></button></a></td></tr>";
-                      j++ ;
-                    });
-                }
             }
         });
       }, 1000);
@@ -353,30 +254,48 @@
                   //console.log(data);
               }
             }
-        }); 
-        // else {
-        //   var status = 0;
-        //   var device = 'lock';
-        //   //console.log('locked');
-        //   $.ajax({
-        //         url:"<?php echo base_url();?>index.php/Dashboard/device",
-        //         method : "POST",
-        //         data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
-        //         dataType : 'json',
-        //         success:function(data){
-        //           if (data != false){
-        //               //console.log(data);
-        //           }
-        //         }
-        //     });
-        // }
+        });
       }
 
     </script>
   <!-- END Script for change status -->
 
- 
-  
+    <!-- Script for expiration time -->
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date(<?php echo '"' . $expired . '"'; ?>).getTime();
+        var expired_time = document.getElementById('expired_time');
+        var guest_devices = document.getElementById('guest_devices');
+        var expired = document.getElementById('expired');
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            var time_left = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+            expired_time.innerHTML = "Your Access to This Room is Ended in : <br>" + time_left;
+            //console.log(time_left);
+            // If the count down is finished, write some text
+            if (distance < 0) {
+                clearInterval(x);
+                expired_time.style.display = 'none';
+                guest_devices.style.display = 'none';
+                expired.style.display = 'block';
+            }
+        }, 1000);
+
+
+    </script>
+    <!-- END Script for expiration time  -->
 </body>
 
 </html>

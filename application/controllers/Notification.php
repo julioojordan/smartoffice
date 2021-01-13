@@ -33,7 +33,7 @@ class Notification extends CI_Controller {
         foreach($check as $row ){
             $time = $row['time'];
             $time = strtotime($time) + 600; //if in 10 minutes not replied then the message will be auto declined
-            $time = date('Y-m-d H:i:', $time);
+            $time = date('Y-m-d H:i:s', $time);
             if($now > $time){// reqeust with older time will be updated to decline nad status to reply
                 $this->m_messages->updateUnreplied($row['id'], 3, 1);
             }
@@ -139,6 +139,17 @@ class Notification extends CI_Controller {
 
         $this->m_token->addToken($token, $room_id, $email);
         $this->m_messages->updateGranted($id_message, 2, 1);
+
+        $data = true;
+        echo json_encode($id_message);
+    }
+
+    public function decline_access()
+    {
+        $id_user_from = $this->input->post('id_user_from');
+        $id_message = $this->input->post('id_message');
+        $room_id = $this->session->userdata('room_id');
+        $this->m_messages->updateDeclined($id_message, 3, 1);
 
         $data = true;
         echo json_encode($id_message);

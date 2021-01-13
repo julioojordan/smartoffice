@@ -12,6 +12,7 @@ class Find extends CI_Controller {
 
       $this->load->model('m_rooms');
       $this->load->model('m_messages');
+      $this->load->model('m_token');
    	}
       
 
@@ -57,6 +58,7 @@ class Find extends CI_Controller {
 		}
 
         $check = $this->m_messages->checkMessage($u_to, $this->session->userdata('email'), 1);
+        $check1 = $this->m_token->checkAccess($room_id, $this->session->userdata('email'), 1)->num_rows(); //checking if the user already have the room access or not
 
         if ($check != 0){ //already sending request
             // $get_message = $this->m_messages->getMessage($this->session->userdata('email'), 1);
@@ -65,8 +67,10 @@ class Find extends CI_Controller {
             // array_push($data, $hour);
             // array_push($data, $minute);
             // array_push($data, $second);
-            $data = false;
-        }else{
+            $data = "ASRequest";
+        }elseif($check1 != 0){ // still have access
+            $data = "AHAccess";
+        }elseif ($check1 == 0 && $check == 0){
             $this->m_messages->sendRequest($this->session->userdata('email'), $u_to, $time);
             $data = true;
         }
