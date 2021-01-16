@@ -39,7 +39,7 @@
 					</span>
 
 					<div class="wrap-input100 validate-input">
-						<input class="input100" type="text" name="email" id="email" placeholder="Email..." autocomplete="off" required
+						<input class="input100" type="text" name="email" id="email" placeholder="Email/ID" autocomplete="off" required
 						>
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
@@ -110,7 +110,7 @@
                 dataType : 'json',
                 success:function(data){
                 console.log(data);
-					if (data == 'success'){ // data not found
+					if (data == 'success'){
 						window.location.href = "<?php echo base_url();?>Dashboard";
 					}else if(data == 'failed'){
 						

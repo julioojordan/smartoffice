@@ -3,7 +3,7 @@ class M_login extends CI_Model
 {
 	function auth($email, $password)
 	{
-		$query = $this->db->query("SELECT * FROM user WHERE email='$email' AND password='$password' LIMIT 1");
+		$query = $this->db->query("SELECT * FROM user WHERE (email='$email' OR user_id='$email') AND password='$password' LIMIT 1");
 		return $query;
     }
     

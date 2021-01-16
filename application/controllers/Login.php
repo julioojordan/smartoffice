@@ -47,12 +47,14 @@ class Login extends CI_Controller {
 					$name=$data['name'];
 					$email=$data['email'];
 					$status=$data['status1'];
+					$user_id=$data['user_id'];
 		
 					$room_id = $this->m_rooms->getRoom($email);
 					$room_id = $room_id['room_id'];
 					$this->session->set_userdata('login', true);
 					$this->session->set_userdata('name', $name);
 					$this->session->set_userdata('email', $email);
+					$this->session->set_userdata('user_id', $user_id);
 					$this->session->set_userdata('room_id', $room_id);
 					$this->session->set_userdata('status', $status);
 					$data = "success";

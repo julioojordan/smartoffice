@@ -27,6 +27,7 @@
                         url:"<?php echo base_url();?>ServerControl/stop",
                         dataType : 'json',
                         success:function(data){
+                            console.log(data);
                             window.location.href = "<?php echo base_url();?>LandingPage";
                         }
                     });  

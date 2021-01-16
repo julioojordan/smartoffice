@@ -9,6 +9,10 @@ class Notification extends CI_Controller {
       if($this->session->userdata('login') != TRUE){
         $url=base_url();
         redirect($url);
+      }
+      
+      if($this->session->userdata('email') == NULL){ // if User havent registered their email
+        redirect('User');
 	  }
 	  $this->load->model('m_messages');
 	  $this->load->model('m_token');

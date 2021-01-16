@@ -43,7 +43,8 @@
                   </p>
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">
-                  <li class="nav-link"><a href="<?php echo base_url();?>Profile" class="nav-item dropdown-item">Profile</a></li>
+                  <li class="nav-link"><a href="<?php echo base_url();?>User" class="nav-item dropdown-item">Profile</a></li>
+                  <li class="nav-link"><a href="<?php echo base_url();?>User/ChangePassword" class="nav-item dropdown-item">Change Passowrd</a></li>
                   <li class="dropdown-divider"></li>
                   <li class="nav-link"><a href="<?php echo base_url();?>Logout" class="nav-item dropdown-item">Log out</a></li>
                 </ul>

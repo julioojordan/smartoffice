@@ -284,25 +284,27 @@
     $(document).ready(function() {
       setInterval(function(){
         // for access request
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/Notification/auto_1",
-            dataType : 'json',
-            success:function(data){
-                result.innerHTML ="";
-                var content_3 ="";
-                var counter_0 = 1;
-                if (data != false){
-                    $.each(data, function(key,val){
-                        content_3 += '<div class="col-md-12"><div class="card"><div class="card-header"><h4 class="card-title" style="font-weight:bold;">Request '+counter_0+ '<span style="color:grey; text-align: right;"> ' + val.time+'</span></h4></div><div class="card-body"><div class="row" style="vertical-align: middle;"><div class="col-lg-6 col-md-12"><p style="font-weight: bold;"> User : '+val.name+'</p><p style="font-weight: bold;"> Email : '+val.u_from+'</p></div><div class="col-lg-6 col-md-12 my-auto"><button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess('+val.user_id+' ,'+val.id+')"><i class="tim-icons icon-controller"></i> Give Access</button><button type='button' class='btn btn-fill btn-danger btn-sm' onclick='declineAccess("+val.user_id+", "+val.id+")'><i class='tim-icons icon-controller'></i> Decline Access</button></div></div></div></div></div>';
-                        counter_0++;
-                    });
-                    result.innerHTML = content_3;
-                } else{ //data tidak ditemukan
-                    result.innerHTML = '<br><p style="text-align: center; font-weight: bold;" id="not_found"> No Request Found ! </p>';
-                    
+        if (document.getElementById("search").value.length == 0 ){
+            $.ajax({
+                url:"<?php echo base_url();?>index.php/Notification/auto_1",
+                dataType : 'json',
+                success:function(data){
+                    result.innerHTML ="";
+                    var content_3 ="";
+                    var counter_0 = 1;
+                    if (data != false){
+                        $.each(data, function(key,val){
+                            content_3 += '<div class="col-md-12"><div class="card"><div class="card-header"><h4 class="card-title" style="font-weight:bold;">Request '+counter_0+ '<span style="color:grey; text-align: right;"> ' + val.time+'</span></h4></div><div class="card-body"><div class="row" style="vertical-align: middle;"><div class="col-lg-6 col-md-12"><p style="font-weight: bold;"> User : '+val.name+'</p><p style="font-weight: bold;"> Email : '+val.u_from+'</p></div><div class="col-lg-6 col-md-12 my-auto"><button type="button" class="btn btn-fill btn-info btn-sm" onclick="giveAccess('+val.user_id+' ,'+val.id+')"><i class="tim-icons icon-controller"></i> Give Access</button><button type="button" class="btn btn-fill btn-danger btn-sm" onclick="declineAccess('+val.user_id+', '+val.id+')"><i class="tim-icons icon-controller"></i> Decline Access</button></div></div></div></div></div>';
+                            counter_0++;
+                        });
+                        result.innerHTML = content_3;
+                    } else{ //data tidak ditemukan
+                        result.innerHTML = '<br><p style="text-align: center; font-weight: bold;" id="not_found"> No Request Found ! </p>';
+                        
+                    }
                 }
-            }
-        });
+            });
+        }
 
         //for access granted
         $.ajax({

@@ -2,12 +2,18 @@
     <div class="sidebar">
       <div class="sidebar-wrapper">
         <div class="logo">
+          <?php if ($this->session->userdata('email') != NULL) : ?>
           <a href="javascript:void(0)" class="simple-text logo-mini">
             Hai
           </a>
           <a href="javascript:void(0)" class="simple-text logo-normal">
             <?= $this->session->userdata('name'); ?> !
           </a>
+          <?php else : ?>
+          <a href="javascript:void(0)" class="simple-text logo-normal">
+            COMPLETE YOUR DATA FIRST !
+          </a>
+          <?php endif; ?>
         </div>
         <ul class="nav">
           <li class="<?= $dashboard_class; ?>">
@@ -41,7 +47,7 @@
             </a>
           </li>
           <li class="<?= $profile_class; ?>">
-            <a href="./user.html">
+            <a href="<?php echo base_url() . 'User' ?>">
               <i class="tim-icons icon-single-02"></i>
               <p>User Profile</p>
             </a>

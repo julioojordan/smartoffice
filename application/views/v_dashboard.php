@@ -375,7 +375,35 @@
     </script>
   <!-- END Script for change status -->
 
- 
+  <?php if ($this->session->flashdata('registered')) : ?>
+        <script type="text/javascript">
+            Swal.fire({
+                icon: 'success',
+                title: 'Success <?=$this->session->userdata("name")?>',
+                text: 'Your Account Has Been Registered !',
+            });
+        </script>
+  <?php endif; ?>
+
+  <?php if ($this->session->flashdata('updated')) : ?>
+        <script type="text/javascript">
+            Swal.fire({
+                icon: 'success',
+                title: 'Success <?=$this->session->userdata("name")?>',
+                text: 'Your Data Has Been Updated !',
+            });
+        </script>
+  <?php endif; ?>
+
+  <?php if ($this->session->flashdata('updated_password')) : ?>
+        <script type="text/javascript">
+            Swal.fire({
+                icon: 'success',
+                title: 'Success <?=$this->session->userdata("name")?>',
+                text: 'Your Password Has Been Updated !',
+            });
+        </script>
+  <?php endif; ?>
   
 </body>
 

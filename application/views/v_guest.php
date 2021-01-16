@@ -129,17 +129,11 @@
     $(document).ready(function() {
       setInterval(function(){
          $.ajax({
-            url:"<?php echo base_url();?>index.php/Dashboard/get_last_status",
+            url:"<?php echo base_url();?>index.php/Access/get_last_status",
             method : "POST",
-            data: {token: <?=$token?>},
+            data: {token: '<?=$token?>'},
             dataType : 'json',
             success:function(data){
-              //lock
-                // if(data[0] == 1){
-                //   lock.checked = true;
-                // } else if (data[0] == 0){
-                //   lock.checked = false;
-                // }
                 
                 //lamp
                 if(data[1] == 1){

@@ -10,6 +10,10 @@ class Find extends CI_Controller {
         redirect($url);
       }
 
+      if($this->session->userdata('email') == NULL){ // if User havent registered their email
+        redirect('User');
+	  }
+
       $this->load->model('m_rooms');
       $this->load->model('m_messages');
       $this->load->model('m_token');

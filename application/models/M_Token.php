@@ -15,7 +15,7 @@ class M_Token extends CI_Model
 	
 	function checkAccess($room_id, $email, $status)
 	{
-		return $this->db->query("SELECT * FROM token WHERE room_id = '$room_id' AND user_email = '$email' AND $status = 1");
+		return $this->db->query("SELECT * FROM token WHERE room_id = '$room_id' AND user_email = '$email' AND status = '$status' ");
 	}
 
 	function getGuest($room_id, $status)

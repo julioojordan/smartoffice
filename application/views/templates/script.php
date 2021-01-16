@@ -183,11 +183,11 @@
     });
   </script>
   <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
-      demo.initDashboardPageCharts();
+    // $(document).ready(function() {
+    //   // Javascript method's body can be found in assets/js/demos.js
+    //   demo.initDashboardPageCharts();
 
-    });
+    // });
   </script>
   <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>

@@ -10,6 +10,10 @@ class Dashboard extends CI_Controller {
         $url=base_url();
         redirect($url);
 	  }
+
+	  if($this->session->userdata('email') == NULL){ // if User havent registered their email
+        redirect('User');
+	  }
 	  $this->load->model('m_devices');
 	  $this->load->model('m_log');
 	  $this->load->model('m_user');
