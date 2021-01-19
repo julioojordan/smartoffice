@@ -44,8 +44,5 @@ class M_Devices extends CI_Model
 		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result_array();
 	}
 
-	function getLampStatus($room_id){
-		return $this->db->query("SELECT * FROM devices WHERE room_id = 1 AND type = 2 ORDER BY type ASC")->row_array();
-	}
 
 }

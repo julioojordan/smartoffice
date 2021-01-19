@@ -3,17 +3,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Microcontroller extends CI_Controller {
 
-    public function read_lamp()
+    public function read()
     {   
-        $this->load->model('m_devices');
+        $this->load->model('m_microcontroller');
+
+        $user_id = $this->input->get('user_id');
+        $room_id = $this->input->get('room_id');
+        $status_user = $this->input->get('status_user');// for checking if owner is in the room or not
+
+        $data = $this->m_microcontroller->getDevicesStatus($room_id);
+        echo json_encode($data);
+
+    }
+
+    public function read_lock()
+    {
+        $this->load->model('m_microcontroller');
+
+        $user_id = $this->input->get('user_id'); // check if the owner has done the registration or not
+
+        //check user email
+        $user_info = $this->m_microcontroller->getUserInfo($user_id)->row_array();
+        if ($user_info['email'] != NULL ){
+            $user = $this->m_microcontroller->getUserDevices($user_id);
+            $room_id = $user['room_id'];
+
+            //set lock status to zero
+            $this->m_microcontroller->setLockStatus($room_id);
+
+            //get lock status
+            $data = $this->m_microcontroller->getLockStatus($room_id)->result();
 
 
-        $lamp = $this->m_devices->getLampStatus(1);
-        $status = $lamp['status'];
-        if ($status == 0){
-            echo "LAMP_OFF";
-        }else{
-            echo "LAMP_ON";
+        }else{ // user haven't registered
+            $data = $this->m_microcontroller->getUserInfo($user_id)->result();
         }
+        echo json_encode($data);
     }
 }
