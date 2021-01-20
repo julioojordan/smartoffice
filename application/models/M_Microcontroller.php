@@ -12,9 +12,8 @@ class M_Microcontroller extends CI_Model
         WHERE user_id = '$user_id'")->row_array();
     }
 
-
-	function getLampStatus($room_id){
-		return $this->db->query("SELECT * FROM devices WHERE room_id = '$room_id' AND type = 2 ORDER BY type ASC")->row_array();
+    function setUserStatus($user_id, $status){
+      $this->db->query("UPDATE user SET status2 = '$status' WHERE user_id = '$user_id'");
     }
     
     function getLockStatus($room_id){

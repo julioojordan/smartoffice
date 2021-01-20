@@ -8,7 +8,7 @@ class M_User extends CI_Model
     
     function updateStatus1User($email)
 	{
-		$this->db->query("UPDATE user SET status1 = 1 WHERE email ='$email'");
+		$this->db->query("UPDATE user SET status1 = 1, status2 = 'Not In The Room' WHERE email ='$email'");
 	}
 	
 	//when user clicking a device button or menu button in website
