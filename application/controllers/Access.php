@@ -71,7 +71,7 @@ class Access extends CI_Controller {
 
 		//inserting log table except for device type = lock
 		if($device != 'lock'){
-			$this->m_log->addLogLamp($device_id, $time, $room_id, $user, $status);
+			$this->m_log->addLog($device_id, $time, $room_id, $user, $status);
 			//update status to  devices table
 			$this->m_devices->updateStatus($device_id, $status);
 		}else{

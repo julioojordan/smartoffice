@@ -4,11 +4,21 @@ class M_User extends CI_Model
 	function checkStatus($status1)
 	{
 		return $this->db->query("SELECT * FROM user WHERE status1 ='$status1'")->result_array();
+	}
+	
+	function checkStatus1($automation)
+	{
+		return $this->db->query("SELECT * FROM user WHERE automation ='$automation'")->result_array();
     }
     
     function updateStatus1User($email)
 	{
 		$this->db->query("UPDATE user SET status1 = 1, status2 = 'Not In The Room' WHERE email ='$email'");
+	}
+
+	function updateStatus1User2($email)
+	{
+		$this->db->query("UPDATE user SET status1 = 0 WHERE email ='$email'");
 	}
 	
 	//when user clicking a device button or menu button in website
@@ -22,6 +32,20 @@ class M_User extends CI_Model
 	{
 		$query=  $this->db->query("SELECT * FROM user WHERE user_id ='$id'");
 		return $query;
+	}
+
+	function getUserRoom($id)
+	{
+		$query=  $this->db->query("SELECT * FROM user 
+		JOIN rooms ON user.email = rooms.owner
+		WHERE user_id ='$id'");
+		return $query;
+	}
+
+	//updated user device status
+	function updateDeviceUser($room_id, $status)
+	{
+		$this->db->query("UPDATE devices set status = $status WHERE room_id ='$room_id' AND type <> 1");
 	}
 	
 
@@ -50,5 +74,15 @@ class M_User extends CI_Model
 	function updatePasswordUser($id, $password)
 	{
 		$this->db->query("UPDATE user SET password ='$password' WHERE user_id ='$id'");
+	}
+
+	function updateAutomation($email, $status)
+	{
+		$this->db->query("UPDATE user SET automation = $status WHERE email ='$email'");
+	}
+
+	function setTimer($user_id, $timer)
+	{
+		$this->db->query("UPDATE user SET automation_timer = $timer WHERE user_id ='$user_id'");
 	}
 }

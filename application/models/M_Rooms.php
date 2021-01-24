@@ -33,6 +33,11 @@ class M_Rooms extends CI_Model
 		$query = $this->db->query("SELECT * FROM rooms JOIN user ON rooms.owner = user.email WHERE (room_id = '$keyword' OR user.name LIKE '%$keyword%') AND owner<>'$email' ORDER BY user.status1 DESC, rooms.room_id ASC");
 		return $query;
 		
-    }
+	}
+	
+	function getAllRooms2()
+	{
+		return $this->db->query("SELECT * FROM rooms ORDER BY room_id ASC ")->result_array();
+	}
 
 }

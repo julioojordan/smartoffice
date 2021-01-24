@@ -44,5 +44,11 @@ class M_Devices extends CI_Model
 		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result_array();
 	}
 
+	function guestDevice($id, $status)
+	{
+		$this->db->query("UPDATE devices SET guest = $status WHERE device_id = '$id'");
+		
+	}
+
 
 }

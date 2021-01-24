@@ -35,7 +35,7 @@
           <div class="col-lg-8 col-md-12">
             <div class="card ">
               <div class="card-header">
-                <h4 class="card-title"> Device Available <span class="float-right"><button type="button" class="btn btn-fill btn-primary btn-sm" data-toggle="modal" data-target="#modalAdd"><i class="tim-icons icon-simple-add"></i></button></span></h4>
+                <h4 class="card-title"> Device Available <span class="float-right" style="display : none"><button type="button" class="btn btn-fill btn-primary btn-sm" data-toggle="modal" data-target="#modalAdd"><i class="tim-icons icon-simple-add"></i></button></span></h4>
                 <small>Room id : <?= $room_id ?></small>
               </div>
               <div class="card-body">
@@ -67,13 +67,21 @@
                             <td class="text-center"><?php echo $i; ?></td>
                             <td><?php echo $row['name']; ?></td>
                             <td><?php echo $row['device_name']; ?></td>
-                            <td class="text-center">  
-                                <a href="#" class="btn btn-danger btn-danger-split btn-sm" onclick="hapus('<?php echo $row['id']; ?>')">
+                            <td class="text-center">
+                                <?php if ($row['guest'] == 1) : ?>
+
+                                <a href="#" class="btn btn-danger btn-danger-split btn-sm" onclick="disable('<?php echo $row['device_id']; ?>')">
                                     <span class="icon text-white-50">
-                                    <i class="tim-icons icon-simple-remove"></i> Delete
+                                    <i class="tim-icons icon-simple-remove"></i> Disable
                                     </span>
                                 </a> &nbsp;
-
+                                <?php else : ?>
+                                  <a href="#" class="btn btn-info btn-info-split btn-sm" onclick="enable('<?php echo $row['device_id']; ?>')">
+                                    <span class="icon text-white-50">
+                                    <i class="tim-icons icon-simple-remove"></i> Enable
+                                    </span>
+                                  </a> &nbsp;
+                                <?php endif ; ?>
                             </td>
                         </tr>
                         <?php 
@@ -93,6 +101,30 @@
               </div>
             </div>
           </div>
+          <div class="col-lg-4 col-md-12">
+            <div class="card ">
+              <div class="card-header">
+                <h4 class="card-title"> Automation </h4>
+              </div>
+              <div class="card-body">
+                <div calss="row">
+                  <input type="number" class="form-control col-md-12" id="set" name="set" placeholder="Set Timer (in minutes)" style="background-color: white; color: black; font-weight: 800;" autocomplete = off>
+                  <button type="button" class="btn btn-fill btn-info btn-sm" onclick="set_timer()"><i class="fa fa-cog"></i> Set</button>
+                </div>
+                <br>
+                <div calss="row">
+                  <div class="center">
+                      <h5 id="automation"></h5>
+                      <input type="checkbox" id="auto_checkbox" name="auto" class="a" disabled/>
+                  </div>
+                </div>
+                <div calss="row">
+                  <h5> Automation Timer : <span id="timer"></span> Minutes</h5>
+                </div>
+              </div>
+            </div>
+          </div>                 
+
         </div>
       </div>
       <?php $this->load->view('templates/footer') ?>
@@ -129,19 +161,43 @@
 
   <!-- Script for deleting devices -->
   <script>
-      function hapus(id){
+      function enable(id){
         Swal.fire({
-                title: 'Are You Sure Want to Delete This Device?',
-                text: "Your device will no longer be controlled from here!",
+                title: 'Are You Sure Want to Enable This Device?',
+                text: "Guest can use this device if you enable it!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Delete!'
+                confirmButtonText: 'Enable!'
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url:"<?php echo base_url();?>index.php/MyRoom/delete_device",
+                        url:"<?php echo base_url();?>index.php/MyRoom/enable_device",
+                        method : "POST",
+                        data: {id: id},
+                        dataType : 'json',
+                        success:function(data){
+                            window.location.reload();
+                        }
+                    });  
+                }
+            })
+      }
+
+      function disable(id){
+        Swal.fire({
+                title: 'Are You Sure Want to Disable This Device?',
+                text: "Guest can't use this device if you disable it!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Disable!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url:"<?php echo base_url();?>index.php/MyRoom/disable_device",
                         method : "POST",
                         data: {id: id},
                         dataType : 'json',
@@ -154,11 +210,83 @@
       }
       
 </script>
+
+<script>
+
+  function set_timer()
+  {
+    var timer = document.getElementById("set").value;
+    $.ajax({
+      url:"<?php echo base_url();?>index.php/MyRoom/set_timer",
+      method : "POST",
+      data: {timer: timer},
+      dataType : 'json',
+      success:function(data){
+        window.location.reload();
+      }
+    });
+  }
+
+  var automation = document.getElementById("automation");
+  var timer = document.getElementById("timer");
+  var auto_checkbox = document.getElementById("auto_checkbox");
+  $(document).ready(function(){
+            setInterval(function(){
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/MyRoom/user_automation_status",
+                    dataType : 'json',
+                    success:function(data){
+                      $.each(data, function(key,val){
+                        if(val.automation == 1){
+                          automation.innerHTML = "Automation Enabled !";
+                          auto_checkbox.checked = true;
+                        }else{
+                          automation.innerHTML = "Automation Disabled !";
+                          auto_checkbox.checked = false;
+                        }
+                        timer.innerHTML = val.automation_timer;
+                      });
+                    }
+                });
+
+            }, 1000);
+        });
+</script>
 <?php if ($this->session->flashdata('delete_success')) : ?>
     <script>
         Swal.fire(
             'Success',
             'Device deleted! ',
+            'success'
+        )
+    </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('enable_success')) : ?>
+    <script>
+        Swal.fire(
+            'Success',
+            'Device enabled for guest! ',
+            'success'
+        )
+    </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('disable_success')) : ?>
+    <script>
+        Swal.fire(
+            'Success',
+            'Device disabled for guest! ',
+            'success'
+        )
+    </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('timer_success')) : ?>
+    <script>
+        Swal.fire(
+            'Success',
+            'Automation Timer Has Been Set ! ',
             'success'
         )
     </script>

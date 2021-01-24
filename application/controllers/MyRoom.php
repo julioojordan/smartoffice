@@ -15,6 +15,7 @@ class MyRoom extends CI_Controller {
 	  }
       $this->load->model('m_devices');
       $this->load->model('m_rooms');
+      $this->load->model('m_user');
    	}
       
 
@@ -33,13 +34,46 @@ class MyRoom extends CI_Controller {
 		$this->load->view('v_myroom', $data);
     }
     
-    public function delete_device()
+    // public function delete_device()
+    // {
+    //     $id = $this->input->post('id');
+    //     $this->m_devices->deleteDevice($id);
+    //     $data = true;
+    //     $this->session->set_flashdata('delete_success','done');
+    //     echo json_encode($data);
+    // }
+
+    public function enable_device()
     {
-        $id = $this->input->post('id');
-        $this->m_devices->deleteDevice($id);
-        $data = true;
-        $this->session->set_flashdata('delete_success','done');
-        echo json_encode($data);
+      $id = $this->input->post('id');
+      $this->m_devices->guestDevice($id, 1);
+      $data = true;
+      $this->session->set_flashdata('enable_success','done');
+      echo json_encode($data);
+    }
+
+    public function disable_device()
+    {
+      $id = $this->input->post('id');
+      $this->m_devices->guestDevice($id, 0);
+      $data = true;
+      $this->session->set_flashdata('disable_success','done');
+      echo json_encode($data);
+    }
+
+    public function set_timer()
+    {
+      $timer = $this->input->post('timer');
+      $this->m_user->setTimer($this->session->userdata('user_id'), $timer);
+      $data = true;
+      $this->session->set_flashdata('timer_success','done');
+      echo json_encode($data);
+    }
+
+    public function user_automation_status()
+    {
+      $data = $this->m_user->getDataUser($this->session->userdata('user_id'))->result();
+      echo json_encode($data);
     }
 
 }

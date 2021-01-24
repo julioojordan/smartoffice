@@ -47,5 +47,10 @@ class M_Token extends CI_Model
 	{
 		$this->db->query("UPDATE token SET status = 0 WHERE no ='$no'");
 	}
+
+	function checkTokenStatus1($room_id)
+	{
+		return $this->db->query("SELECT * FROM token WHERE room_id = '$room_id' ORDER BY valid DESC LIMIT 1");
+	}
 	//end for server
 }

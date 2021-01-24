@@ -41,16 +41,42 @@
                     url:"<?php echo base_url();?>index.php/ServerControl/user_status",
                     dataType : 'json',
                     success:function(data){
-                        console.log(data);
+                        //console.log(data);
                     }
                 });
+
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/ServerControl/user_offline",
+                    dataType : 'json',
+                    success:function(data){
+                        //console.log(data);
+                    }
+                });
+
                 $.ajax({
                     url:"<?php echo base_url();?>index.php/ServerControl/token_status",
                     dataType : 'json',
                     success:function(data){
-                        console.log(data);
+                        //console.log(data);
                     }
                 });
+
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/ServerControl/device_status",
+                    dataType : 'json',
+                    success:function(data){
+                        //console.log(data);
+                    }
+                });
+
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/ServerControl/automation_status",
+                    dataType : 'json',
+                    success:function(data){
+                        //console.log(data);
+                    }
+                });
+
             }, 1000);
         });
     </script>
