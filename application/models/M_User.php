@@ -59,10 +59,10 @@ class M_User extends CI_Model
 		return $this->db->query("SELECT * FROM user WHERE user_id ='$id' AND password ='$password'");
 	}
 
-	function updateUser($id, $email, $name)
+	function updateUser($id, $email, $name, $room_type)
 	{
 		$this->db->query("UPDATE user SET email ='$email', name='$name' WHERE user_id ='$id'");
-		$this->db->query("INSERT INTO rooms(owner, name) VALUES('$email', '$name')");
+		$this->db->query("INSERT INTO rooms(room_type, owner, name) VALUES('$room_type', '$email', '$name')");
 	}
 
 	function updateUser1($id, $email, $name, $room_id)

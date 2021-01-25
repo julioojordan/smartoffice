@@ -13,6 +13,7 @@ class User extends CI_Controller {
 
 	  $this->load->model('m_user');
       $this->load->model('m_rooms');
+      $this->load->model('m_devices');
    	}
 
 	public function index()
@@ -56,10 +57,13 @@ class User extends CI_Controller {
             $data = "email_used";
         }else{
             //update user information & room information
-            $this->m_user->updateUser($this->session->userdata('user_id'), $email, $name);
+            $this->m_user->updateUser($this->session->userdata('user_id'), $email, $name, $this->session->userdata('room_type'));
 
             $room_id = $this->m_rooms->getRoom($email);
-			$room_id = $room_id['room_id'];
+            $room_id = $room_id['room_id'];
+            
+            //registering devices
+            $this->m_devices->addDevice($room_id, $this->session->userdata('room_type'));
 
             $this->session->set_flashdata('registered', 'registered');
             $this->session->set_userdata('email', $email);

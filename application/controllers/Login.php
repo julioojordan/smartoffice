@@ -48,7 +48,7 @@ class Login extends CI_Controller {
 					$email=$data['email'];
 					$status=$data['status1'];
 					$user_id=$data['user_id'];
-		
+					$room_type=$data['room_type'];
 					$room_id = $this->m_rooms->getRoom($email);
 					$room_id = $room_id['room_id'];
 					$this->session->set_userdata('login', true);
@@ -56,6 +56,7 @@ class Login extends CI_Controller {
 					$this->session->set_userdata('email', $email);
 					$this->session->set_userdata('user_id', $user_id);
 					$this->session->set_userdata('room_id', $room_id);
+					$this->session->set_userdata('room_type', $room_type);
 					$this->session->set_userdata('status', $status);
 					$data = "success";
 				}else{

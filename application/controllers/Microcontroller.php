@@ -20,7 +20,7 @@ class Microcontroller extends CI_Controller {
 
     }
 
-    public function read_lock()
+    public function initializing()
     {
         $this->load->model('m_microcontroller');
 
@@ -36,7 +36,11 @@ class Microcontroller extends CI_Controller {
             $this->m_microcontroller->setLockStatus($room_id);
 
             //get lock status
-            $data = $this->m_microcontroller->getLockStatus($room_id)->result();
+            $lock = $this->m_microcontroller->getLockStatus($room_id)->row_array();
+            $lock_status = $lock['status'];
+
+            $room_type = $user_info['room_type'];
+            $data = array('room_id' => $room_id, 'room_type' => $room_type, 'status' => $lock_status);
 
 
         }else{ // user haven't registered

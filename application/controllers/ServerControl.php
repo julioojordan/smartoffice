@@ -4,25 +4,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class ServerControl extends CI_Controller {
 
 	public function __construct()
-   	{
+  {
       parent::__construct();
       if($this->session->userdata('server_login') != TRUE){
         $url=base_url();
         redirect($url);
-	  }
-    $this->load->model('m_server');
-    $this->load->model('m_user');
-    $this->load->model('m_token');
-    $this->load->model('m_log');
-    $this->load->model('m_devices');
-    $this->load->model('m_rooms');
-   	}
+	    }
+      $this->load->model('m_server');
+      $this->load->model('m_user');
+      $this->load->model('m_token');
+      $this->load->model('m_log');
+      $this->load->model('m_devices');
+      $this->load->model('m_rooms');
+  }
     
     
-    public function index()
+  public function index()
 	{	
-		$this->load->view('server');
-    }
+		  $this->load->view('server');
+  }
     
     public function stop()
     {

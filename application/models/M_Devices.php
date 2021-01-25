@@ -50,5 +50,17 @@ class M_Devices extends CI_Model
 		
 	}
 
+	function addDevice($room_id, $room_type)
+	{
+		if ($room_type == 'R1'){ //Normal Room
+			$this->db->query("INSERT INTO devices(type, device_name, room_id, status) VALUES('1', 'lock', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('3', 'fan', '$room_id', 0)");
+		}elseif ($room_type == 'R2'){ // Exclusive Room
+			$this->db->query("INSERT INTO devices(type, device_name, room_id, status) VALUES('1', 'lock', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('3', 'fan', '$room_id', 0), ('3', 'fan', '$room_id', 0)");
+		}elseif ($room_type == 'H1'){// Super Room
+			$this->db->query("INSERT INTO devices(type, device_name, room_id, status) VALUES('1', 'lock', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('2', 'lamp', '$room_id', 0), ('3', 'fan', '$room_id', 0), ('3', 'fan', '$room_id', 0), ('3', 'fan', '$room_id', 0)");
+		}
+		
+	}
+
 
 }
