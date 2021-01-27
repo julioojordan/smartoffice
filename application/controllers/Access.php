@@ -89,13 +89,7 @@ class Access extends CI_Controller {
         $token = $this->input->post('token');
         $room = $this->m_token->getToken($token)->row_array();
         $room_id = $room['room_id'];
-		$status = $this->m_devices->getStatus($room_id);
-		$data = array();
-		foreach($status as $row){
-			array_push($data,$row['status']);
-		}
-
-		// data [0] = lock [1] = lamp [3] = fan
+		$data = $this->m_devices->getStatus2($room_id);
 		echo json_encode($data);
 
 	}

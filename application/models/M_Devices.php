@@ -15,7 +15,7 @@ class M_Devices extends CI_Model
 		return $this->db->query("SELECT * FROM devices 
         JOIN rooms ON devices.room_id = rooms.room_id
         JOIN device_types ON devices.type = device_types.id
-        WHERE devices.room_id = (SELECT room_id FROM token WHERE token = '$token')")->result_array();
+        WHERE devices.room_id = (SELECT room_id FROM token WHERE token = '$token') AND devices.guest = 1")->result_array();
 		
 	}
 
@@ -26,11 +26,7 @@ class M_Devices extends CI_Model
 
 	function updateStatus($id, $status)
 	{
-		if ($status == 1){
-			$this->db->query("UPDATE devices SET status = 1 WHERE device_id = '$id'");
-		}else{
-			$this->db->query("UPDATE devices SET status = 0 WHERE device_id = '$id'");
-		}
+		$this->db->query("UPDATE devices SET status = $status WHERE device_id = '$id'");
 		
 	}
 
@@ -42,6 +38,16 @@ class M_Devices extends CI_Model
 
     function getStatus($room_id){
 		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result_array();
+	}
+
+	//for dashboard
+	function getStatus1($room_id){
+		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' ORDER BY type ASC")->result();
+	}
+
+	//for guest
+	function getStatus2($room_id){
+		return $this->db->query("SELECT * FROM devices WHERE room_id ='$room_id' AND guest = 1 ORDER BY type ASC")->result();
 	}
 
 	function guestDevice($id, $status)

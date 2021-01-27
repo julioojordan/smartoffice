@@ -64,12 +64,7 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function get_last_status(){
-		$status = $this->m_devices->getStatus($this->session->userdata('room_id'));
-		$data = array();
-		foreach($status as $row){
-			array_push($data,$row['status']);
-		}
-
+		$data = $this->m_devices->getStatus1($this->session->userdata('room_id'));
 		// data [0] = lock [1] = lamp [3] = fan
 		echo json_encode($data);
 

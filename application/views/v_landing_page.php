@@ -42,7 +42,7 @@ http://www.templatemo.com/tm-474-app-landing
         <section id="templatemo_home">
             <div class="container">
                 <div class="templatemo_home_inner_wapper">
-                    <h1 class="text-center"><i class="fa fa-mobile-phone"></i> Smart Office</h1>
+                    <h1 class="text-center"><i class="fa fa-mobile-phone"></i> Smart Room</h1>
                 </div>
                 <div class="templatemo_home_inner_wapper">
                     <h2 class="text-center">Beta</h2>

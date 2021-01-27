@@ -97,41 +97,6 @@
     $(document).ready(function() {
       setInterval(function(){
 
-        //guest
-        // $.ajax({
-        //     url:"<?php echo base_url();?>index.php/Dashboard/auto_guest",
-        //     dataType : 'json',
-        //     success:function(data){
-        //         if (data == false){//no guest
-        //             table_body_guest.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Guest</td>"
-        //         }else{
-        //             table_body_guest.innerHTML = "";
-        //             var i = 1;
-        //             $.each(data, function(key,val){
-        //               table_body_guest.innerHTML += "<tr><td style='text-align:center;'>"+i+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'>"+val.user_email+"</td></tr>";
-        //               i++ ;
-        //             });
-        //         }
-        //     }
-        // });
-
-        //access
-        // $.ajax({
-        //     url:"<?php echo base_url();?>index.php/Dashboard/auto_access",
-        //     dataType : 'json',
-        //     success:function(data){
-        //         if (data == false){//no guest
-        //             table_body_access.innerHTML = "<td style='text-align:center;' colspan='6'>You Have no Access to other's Rooms</td>"
-        //         }else{
-        //             table_body_access.innerHTML = "";
-        //             var j = 1;
-        //             $.each(data, function(key,val){
-        //               table_body_access.innerHTML += "<tr><td style='text-align:center;'>"+j+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'><a href='<?php echo base_url();?>index.php/Access/rooms/"+val.token+"'><button type='button' class='btn btn-fill btn-info btn-sm'><i class='tim-icons icon-controller'>&nbsp; Access</i></button></a></td></tr>";
-        //               j++ ;
-        //             });
-        //         }
-        //     }
-        // });
       }, 1000);
     });
   </script>

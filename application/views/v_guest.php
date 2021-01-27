@@ -38,42 +38,34 @@
             
         </div>
         <div class="row" id="guest_devices">
-          <?php 
+            <?php 
               $i = 1;
               foreach($devices as $row):
                 if($row['type'] == 1){ 
                   $icon = "fas fa-key";
                   $left = "<i class='fas fa-lock-open'></i>";
                   $right = "<i class='fas fa-lock'></i>";
-                  $id = "lock";
-                  $id2 = "lock_id";
-                  $id3 = "lock_room_id";
-                  $click = "changeStatusLock()";
+                  $id = $row['device_id'];
+                  $click = "changeStatusLock('".$row['device_id']."', '".$row['room_id']."', 'lock')";
                 } elseif($row['type'] == 2){
                   $icon = "far fa-lightbulb";
                   $left = "On";
                   $right = "Off";
-                  $id = "lamp";
-                  $id2 = "lamp_id";
-                  $id3 = "lamp_room_id";
-                  $click = "changeStatusLamp()";
+                  $id = $row['device_id'];
+                  $click = "changeStatus(this.checked, '".$row['device_id']."', '".$row['room_id']."', 'fan')";
                 }elseif($row['type'] == 3){
                   $icon = "far fa-snowflake";
                   $left = "On";
                   $right = "Off";
-                  $id = "fan";
-                  $id2 = "fan_id";
-                  $id3 = "fan_room_id";
-                  $click = "changeStatusFan()";
+                  $id = $row['device_id'];
+                  $click ="changeStatus(this.checked, '".$row['device_id']."', '".$row['room_id']."', 'lamp')";
                 }
-          ?>
+            ?>
           <div class="col-lg-4">
             <div class="card">
               <div class="card-header">
                 <h5 class="card-category">Device <?=$i?></h5>
                 <h3 class="card-title" style="text-transform: capitalize;"><i class="<?= $icon; ?>"></i> &nbsp; <?= $row['device_name'] ?></h3>
-                <input type="hidden" id="<?= $id2; ?>" value="<?= $row['device_id'] ?>">
-                <input type="hidden" id="<?= $id3; ?>" value="<?= $row['room_id'] ?>">
               </div>
               <div class="card-body">
                 <div class="row" style="vertical-align: middle; text-align: center;">
@@ -92,7 +84,7 @@
                       </div>
                     <?php else: ?>
                       <div class="mid">
-                      <button type="button" class="btn btn-fill btn-primary btn-sm" onclick="changeStatusLock()"><i class='fas fa-lock-open'>&nbsp; Unlock</i></button>
+                      <button type="button" class="btn btn-fill btn-primary btn-sm" onclick="<?= $click; ?>"><i class='fas fa-lock-open'>&nbsp; Unlock</i></button>
                       </div>
                     <?php endif;?>
                   </div>
@@ -123,10 +115,12 @@
 
    <!-- script check status -->
    <script>
-    var lamp = document.getElementById("lamp");
-    var fan = document.getElementById("fan");
 
     $(document).ready(function() {
+      var first = true;
+      var counter = 0;
+      var now = 0;
+
       setInterval(function(){
          $.ajax({
             url:"<?php echo base_url();?>index.php/Access/get_last_status",
@@ -134,20 +128,40 @@
             data: {token: '<?=$token?>'},
             dataType : 'json',
             success:function(data){
-                
-                //lamp
-                if(data[1] == 1){
-                  lamp.checked = true;
-                } else if (data[1] == 0){
-                  lamp.checked = false;
-                }
+              //checking if owner disable some devices
+              var len = data.length
+              if (first == true){
+                counter = len
+                first = false;
+              }
+              now = len;
+              if(counter != len){
+                console.log("Device Changed!");
+                location.reload();
+              }
 
-                //fan
-                if(data[2] == 1){
-                  fan.checked = true;
-                } else if (data[2] == 0){
-                  fan.checked = false;
+              $.each(data, function(key,val){
+                var device_type = val.type
+                if( device_type != 1){
+                  var id_tag = val.device_id
+                  var status = val.status
+                  //check if owner enable some devices
+                  try {
+                    var check = document.getElementById(id_tag).checked;
+                  }
+                  catch(err) {
+                    console.log("Device Changed!");
+                    location.reload();
+                  }
+
+                  if (status == 1){
+                    document.getElementById(id_tag).checked = true;
+                  }else if (status == 0){
+                    document.getElementById(id_tag).checked = false;
+                  }
                 }
+                
+              });
 
             }
         });
@@ -156,99 +170,41 @@
   </script>
 
   <!-- Script for change status -->
-    <script>
-      function changeStatusLamp(){
-        var lamp = document.getElementById("lamp");
-        var lamp_id = document.getElementById("lamp_id").value;
-        var lamp_room_id = document.getElementById("lamp_room_id").value;
-        if (lamp.checked == true){
-          var status = 1;
-          var device = 'lamp';
-          //console.log('on');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: lamp_id, room_id: lamp_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
-        } else {
-          var status = 0;
-          var device = 'lamp';
-          //console.log('off');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: lamp_id, room_id: lamp_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
+  <script>
+      function changeStatus(status, device_id, room_id, device){
+        //console.log(status);
+        if(status == true){
+          var status_d = 1;
+        }else{
+          var status_d = 0;
         }
+          $.ajax({
+                url:"<?php echo base_url();?>index.php/Access/device",
+                method : "POST",
+                data: {status: status_d, device_id: device_id, device: device, room_id: room_id},
+                dataType : 'json',
+                success:function(data){
+                  if (data != false){
+                      //console.log(data);
+                  }
+                }
+            });
       }
 
-      function changeStatusFan(){
-        var fan = document.getElementById("fan");
-        var fan_id = document.getElementById("fan_id").value;
-        var fan_room_id = document.getElementById("fan_room_id").value;
-       
-        if (fan.checked == true){
-          var status = 1;
-          var device = 'fan';
-          //console.log('on');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: fan_id, room_id: fan_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
-        } else {
-          var status = 0;
-          var device = 'fan';
-          //console.log('off');
-          $.ajax({
-                url:"<?php echo base_url();?>index.php/Dashboard/device",
-                method : "POST",
-                data: {status: status, device_id: fan_id, room_id: fan_room_id, device: device},
-                dataType : 'json',
-                success:function(data){
-                  if (data != false){
-                      //console.log(data);
-                  }
-                }
-            });
-        }
-      }
-
-      function changeStatusLock(){
-        var lock_id = document.getElementById("lock_id").value;
-        var lock_room_id = document.getElementById("lock_room_id").value;
+      function changeStatusLock(device_id, room_id, device){
         var status = null;
-        var device = 'lock';
           //console.log('unlocked');
         $.ajax({
-            url:"<?php echo base_url();?>index.php/Dashboard/device",
+            url:"<?php echo base_url();?>index.php/Access/device",
             method : "POST",
-            data: {status: status, device_id: lock_id, room_id: lock_room_id, device: device},
+            data: {status: status, device_id: device_id, device: device, room_id: room_id},
             dataType : 'json',
             success:function(data){
               if (data != false){
                   //console.log(data);
               }
             }
-        });
+        }); 
       }
 
     </script>
