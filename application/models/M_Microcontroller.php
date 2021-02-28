@@ -8,7 +8,7 @@ class M_Microcontroller extends CI_Model
 
     function getUserDevices($user_id){
 		return $this->db->query("SELECT * FROM user 
-        JOIN rooms ON user.email = rooms.owner
+        JOIN rooms ON user.user_id = rooms.owner
         WHERE user_id = '$user_id'")->row_array();
     }
 

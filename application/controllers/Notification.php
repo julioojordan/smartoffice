@@ -28,24 +28,9 @@ class Notification extends CI_Controller {
 		$data['profile_class'] = "";
 		$data['access_class'] = "";
         $data['location'] = "Notification";
-        $check = $this->m_messages->getUnreplied($this->session->userdata('email'), 1, 0)->result_array();
-        if ( function_exists( 'date_default_timezone_set' ) ){
-    		date_default_timezone_set('Asia/Jakarta');
-			$now = date("Y-m-d H:i:s");
-		}
 
-        foreach($check as $row ){
-            $time = $row['time'];
-            $time = strtotime($time) + 600; //if in 10 minutes not replied then the message will be auto declined
-            $time = date('Y-m-d H:i:s', $time);
-            if($now > $time){// reqeust with older time will be updated to decline nad status to reply
-                $this->m_messages->updateUnreplied($row['id'], 3, 1);
-            }
-        }
-
-        $data['message_1'] = $this->m_messages->getUnreplied($this->session->userdata('email'), 1, 0)->result_array(); // reqeusting
-        $data['message_2'] = $this->m_messages->getUnreplied($this->session->userdata('email'), 2, 1)->result_array();// Accepted
-        $data['message_3'] = $this->m_messages->getUnreplied($this->session->userdata('email'), 3, 1)->result_array();// Decline
+        $data['message_1'] = $this->m_messages->getUnreplied($this->session->userdata('user_id'), 1, 0)->result_array(); // reqeusting
+        $data['history'] = $this->m_messages->getReplied($this->session->userdata('user_id'), 1)->result_array();
 		$this->load->view('v_notification', $data);
     }
     
@@ -54,52 +39,20 @@ class Notification extends CI_Controller {
     public function search_1()
     {
         $keyword = $this->input->post('search');
-        $search = $this->m_messages->searchMessages($keyword, $this->session->userdata('email'), 1, 0);
+        $search = $this->m_messages->searchMessages($keyword, $this->session->userdata('user_id'), 1, 0);
 
         if ($search->num_rows() != 0) {
 			$data=$search->result();
 		}else{ //tidak ditemukan
             $data = false;
         }
-        echo json_encode($data);
-    }
-
-    //for access given searching
-
-    public function search_2()
-    {
-        $keyword = $this->input->post('search');
-        $search = $this->m_messages->searchMessages($keyword, $this->session->userdata('email'), 2, 1);
-
-        if ($search->num_rows() != 0) {
-			$data=$search->result();
-		}else{ //tidak ditemukan
-            $data = false;
-        }
-
-        echo json_encode($data);
-    }
-
-    //for access declined searching
-
-    public function search_3()
-    {
-        $keyword = $this->input->post('search');
-        $search = $this->m_messages->searchMessages($keyword, $this->session->userdata('email'), 3, 1);
-
-        if ($search->num_rows() != 0) {
-			$data=$search->result();
-		}else{ //tidak ditemukan
-            $data = false;
-        }
-
         echo json_encode($data);
     }
 
     // auto 
     public function auto_1()
     {
-        $data = $this->m_messages->getUnreplied($this->session->userdata('email'), 1, 0);
+        $data = $this->m_messages->getUnreplied($this->session->userdata('user_id'), 1, 0);
         if ($data->num_rows() != 0) {
 			$data=$data->result();
 		}else{ //tidak ditemukan
@@ -109,39 +62,26 @@ class Notification extends CI_Controller {
         echo json_encode($data);
     }
 
-    public function auto_2()
+    public function auto_history()
     {
-        $data = $this->m_messages->getUnreplied($this->session->userdata('email'), 2, 1);
+        $data = $this->m_messages->getReplied($this->session->userdata('user_id'), 1);
         if ($data->num_rows() != 0) {
 			$data=$data->result();
 		}else{ //tidak ditemukan
             $data = false;
         }
+        
         echo json_encode($data);
     }
-
-    public function auto_3()
-    {
-        $data = $this->m_messages->getUnreplied($this->session->userdata('email'), 3, 1);
-        if ($data->num_rows() != 0) {
-			$data=$data->result();
-		}else{ //tidak ditemukan
-            $data = false;
-        }
-        echo json_encode($data);
-    }
-
 
     public function give_access()
     {
         $id_user_from = $this->input->post('id_user_from');
         $id_message = $this->input->post('id_message');
         $room_id = $this->session->userdata('room_id');
-        $user = $this->m_user->getDataUser($id_user_from)->row_array();
-        $email = $user['email'];
         $token = random_string('sha1');
 
-        $this->m_token->addToken($token, $room_id, $email);
+        $this->m_token->addToken($token, $room_id, $id_user_from);
         $this->m_messages->updateGranted($id_message, 2, 1);
 
         $data = true;

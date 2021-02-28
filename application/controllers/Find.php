@@ -29,17 +29,17 @@ class Find extends CI_Controller {
 		$data['profile_class'] = "";
         $data['location'] = "Find";
 		$data['access_class'] = "";
-        $room = $this->m_rooms->getRoom($this->session->userdata('email'));
+        $room = $this->m_rooms->getRoom($this->session->userdata('user_id'));
         $data['room_id'] = $room['room_id'];
 
-        $data['rooms'] = $this->m_rooms->getAllRooms($this->session->userdata('email'));
+        $data['rooms'] = $this->m_rooms->getAllRooms($this->session->userdata('user_id'));
 		$this->load->view('v_find', $data);
     }
 
     public function search()
     {
         $keyword = $this->input->post('search');
-        $search = $this->m_rooms->searchRoom($keyword, $this->session->userdata('email'));
+        $search = $this->m_rooms->searchRoom($keyword, $this->session->userdata('user_id'));
 
         if ($search->num_rows() != 0) {
 			$data=$search->result();
@@ -61,8 +61,8 @@ class Find extends CI_Controller {
 			$time = date("Y-m-d H:i:s");
 		}
 
-        $check = $this->m_messages->checkMessage($u_to, $this->session->userdata('email'), 1);
-        $check1 = $this->m_token->checkAccess($room_id, $this->session->userdata('email'), 1)->num_rows(); //checking if the user already have the room access or not
+        $check = $this->m_messages->checkMessage($u_to, $this->session->userdata('user_id'), 1);
+        $check1 = $this->m_token->checkAccess($room_id, $this->session->userdata('user_id'), 1)->num_rows(); //checking if the user already have the room access or not
 
         if ($check != 0){ //already sending request
             // $get_message = $this->m_messages->getMessage($this->session->userdata('email'), 1);
@@ -75,7 +75,7 @@ class Find extends CI_Controller {
         }elseif($check1 != 0){ // still have access
             $data = "AHAccess";
         }elseif ($check1 == 0 && $check == 0){
-            $this->m_messages->sendRequest($this->session->userdata('email'), $u_to, $time);
+            $this->m_messages->sendRequest($this->session->userdata('user_id'), $u_to, $time);
             $data = true;
         }
 
@@ -86,7 +86,7 @@ class Find extends CI_Controller {
 
     public function auto()
     {
-        $data = $this->m_rooms->getAllRooms1($this->session->userdata('email'));
+        $data = $this->m_rooms->getAllRooms1($this->session->userdata('user_id'));
         echo json_encode($data);
     }
 

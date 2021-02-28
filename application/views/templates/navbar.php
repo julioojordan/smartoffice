@@ -43,8 +43,10 @@
                   </p>
                 </a>
                 <ul class="dropdown-menu dropdown-navbar">
-                  <li class="nav-link"><a href="<?php echo base_url();?>User" class="nav-item dropdown-item">Profile</a></li>
-                  <li class="nav-link"><a href="<?php echo base_url();?>User/ChangePassword" class="nav-item dropdown-item">Change Passowrd</a></li>
+                  <?php if ($this->session->userdata('role') == 'user') : ?>
+                    <li class="nav-link"><a href="<?php echo base_url();?>User" class="nav-item dropdown-item">Profile</a></li>
+                    <li class="nav-link"><a href="<?php echo base_url();?>User/ChangePassword" class="nav-item dropdown-item">Change Passowrd</a></li>
+                  <?php endif; ?>
                   <li class="dropdown-divider"></li>
                   <li class="nav-link"><a href="<?php echo base_url();?>Logout" class="nav-item dropdown-item">Log out</a></li>
                 </ul>

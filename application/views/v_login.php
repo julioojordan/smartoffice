@@ -63,11 +63,7 @@
 					</div>
 
 					<div class="text-center p-t-136">
-                        Don't have an account ?
-						<a class="p-t-136" href="<?php echo base_url().'Login/signup'?>">
-							<strong>Sign Up</strong>
-							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-						</a>
+                        
 					</div>
 				</form>
 			</div>
@@ -110,8 +106,10 @@
                 dataType : 'json',
                 success:function(data){
                 console.log(data);
-					if (data == 'success'){
+					if (data == 'user'){
 						window.location.href = "<?php echo base_url();?>Dashboard";
+					}else if(data == 'admin'){
+						window.location.href = "<?php echo base_url();?>DashboardAdmin";
 					}else if(data == 'failed'){
 						
                         Swal.fire({

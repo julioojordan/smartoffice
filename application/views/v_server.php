@@ -77,6 +77,14 @@
                     }
                 });
 
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/ServerControl/automation_message",
+                    dataType : 'json',
+                    success:function(data){
+                        //console.log(data);
+                    }
+                });
+
             }, 1000);
         });
     </script>

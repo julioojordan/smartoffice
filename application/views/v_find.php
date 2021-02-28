@@ -52,7 +52,7 @@
                                         $k1 = "Online";
                                     }
                                 ?>
-                                <div class="col-lg-12 col-md-12">
+                                <!-- <div class="col-lg-12 col-md-12">
                                     <div class="card">
                                         <div class="card-header">
                                             <h4 class="card-title" style="font-weight:bold;">Room Id #<span style="color:grey;"><?= $row['room_id']?></span></h4>
@@ -72,7 +72,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -101,6 +101,7 @@
             var result2 =  document.getElementById("result2");
             var dot = "";
             var k1 = "";
+            var k2 = "";
             $("#search").keyup(function(){
                 if($("#search").val().length>1){
                     result.style.display = "none";
@@ -125,7 +126,12 @@
                                     }else if(val.status1 == 2){
                                         dot = "green";
                                         k1 = "Online";
-                                        result2.innerHTML = "<div class='col-lg-12 col-md-12'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+val.status2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request("+val.room_id+")'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
+                                        if(val.status2 == 0){
+                                            k2 = "Not In The Room";
+                                        }else{
+                                            k2 = "In The Room";
+                                        }
+                                        result2.innerHTML = "<div class='col-lg-12 col-md-12'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+k2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request("+val.room_id+")'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
                                     }
                                 });
                             } else{ //data tidak ditemukan
@@ -167,7 +173,12 @@
                     }else if(val.status1 == 2){
                         dot = "green";
                         k1 = "Online";
-                        result.innerHTML += "<div class='col-lg-12 col-md-12'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+val.status2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request("+val.room_id+")'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
+                        if(val.status2 == 0){
+                            k2 = "Not In The Room";
+                        }else{
+                            k2 = "In The Room";
+                        }
+                        result.innerHTML += "<div class='col-lg-12 col-md-12'> <div class='card'><div class='card-header'><h4 class='card-title' style='font-weight:bold;'>Room Id #<span style='color:grey;'>"+val.room_id+"</span></h4></div><div class='card-body'><div class='row' style='vertical-align: middle; text-align: center;'><div class='col-lg-6 col-md-12'><p style='font-weight: bold;'> Owner : "+val.name+" </p><p> <i class='fas fa-circle' style='color: "+dot+";'></i> "+k1+" </p><p>"+k2+"</p></div><div class='col-lg-6 col-md-12 my-auto'><button type='button' class='btn btn-fill btn-info btn-sm' onclick='request("+val.room_id+")'><i class='tim-icons icon-controller'></i> Request Access</button></div></div></div></div></div>";
                     }
                 });
 

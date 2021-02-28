@@ -31,7 +31,7 @@ class Access extends CI_Controller {
         $data['access_class'] = "active";
         
         //your access to other's rooms
-		$data['access'] = $this->m_token->getAccess($this->session->userdata('email'), 1)->result_array();
+		$data['access'] = $this->m_token->getAccess($this->session->userdata('user_id'), 1)->result_array();
 		$this->load->view('v_access', $data);
     }
 
@@ -67,7 +67,7 @@ class Access extends CI_Controller {
     		date_default_timezone_set('Asia/Jakarta');
 			$time = date("Y-m-d H:i:s");
 		}
-		$user = $this->session->userdata('email');
+		$user = $this->session->userdata('user_id');
 
 		//inserting log table except for device type = lock
 		if($device != 'lock'){
@@ -79,7 +79,7 @@ class Access extends CI_Controller {
 		}
 
 		//update last status user so that they're not recognized as idle by server
-		$this->m_user->updateStatus1User1($this->session->userdata('email'), $time);
+		$this->m_user->updateStatus1User1($this->session->userdata('user_id'), $time);
 
 		echo json_encode($data);
 		

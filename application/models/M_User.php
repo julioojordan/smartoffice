@@ -11,20 +11,20 @@ class M_User extends CI_Model
 		return $this->db->query("SELECT * FROM user WHERE automation ='$automation'")->result_array();
     }
     
-    function updateStatus1User($email)
+    function updateStatus1User($id)
 	{
-		$this->db->query("UPDATE user SET status1 = 1, status2 = 'Not In The Room' WHERE email ='$email'");
+		$this->db->query("UPDATE user SET status1 = 1, status2 = 'Not In The Room' WHERE user_id ='$id'");
 	}
 
-	function updateStatus1User2($email)
+	function updateStatus1User2($id)
 	{
-		$this->db->query("UPDATE user SET status1 = 0 WHERE email ='$email'");
+		$this->db->query("UPDATE user SET status1 = 0 WHERE user_id ='$id'");
 	}
 	
 	//when user clicking a device button or menu button in website
-	function updateStatus1User1($email, $time)
+	function updateStatus1User1($id, $time)
 	{
-		$this->db->query("UPDATE user SET status1 = 2, last_login_time = '$time' WHERE email ='$email'");
+		$this->db->query("UPDATE user SET status1 = 2, last_login_time = '$time' WHERE user_id ='$id'");
 	}
 	
 	//chekcing data user from their id
@@ -37,7 +37,7 @@ class M_User extends CI_Model
 	function getUserRoom($id)
 	{
 		$query=  $this->db->query("SELECT * FROM user 
-		JOIN rooms ON user.email = rooms.owner
+		JOIN rooms ON user.user_id = rooms.owner
 		WHERE user_id ='$id'");
 		return $query;
 	}
@@ -62,13 +62,12 @@ class M_User extends CI_Model
 	function updateUser($id, $email, $name, $room_type)
 	{
 		$this->db->query("UPDATE user SET email ='$email', name='$name' WHERE user_id ='$id'");
-		$this->db->query("INSERT INTO rooms(room_type, owner, name) VALUES('$room_type', '$email', '$name')");
+		$this->db->query("INSERT INTO rooms(room_type, owner, name) VALUES('$room_type', '$id', '$name')");
 	}
 
 	function updateUser1($id, $email, $name, $room_id)
 	{
 		$this->db->query("UPDATE user SET email ='$email', name='$name' WHERE user_id ='$id'");
-		$this->db->query("UPDATE rooms SET owner='$email', name='$name' WHERE room_id = '$room_id'");
 	}
 
 	function updatePasswordUser($id, $password)
@@ -76,13 +75,28 @@ class M_User extends CI_Model
 		$this->db->query("UPDATE user SET password ='$password' WHERE user_id ='$id'");
 	}
 
-	function updateAutomation($email, $status)
+	function updateAutomation($user_id, $status)
 	{
-		$this->db->query("UPDATE user SET automation = $status WHERE email ='$email'");
+		$this->db->query("UPDATE user SET automation = $status WHERE user_id ='$user_id'");
 	}
 
 	function setTimer($user_id, $timer)
 	{
 		$this->db->query("UPDATE user SET automation_timer = $timer WHERE user_id ='$user_id'");
+	}
+
+	function addUser($user_id, $room_type, $password)
+	{
+		$this->db->query("INSERT INTO user(user_id, room_type, password) VALUES('$user_id', '$room_type', '$password')");
+	}
+
+	function getAllUser()
+	{
+		return $this->db->query("SELECT * FROM user");
+	}
+
+	function getUserStatus($status)
+	{
+		return $this->db->query("SELECT * FROM user WHERE status1 = $status");
 	}
 }

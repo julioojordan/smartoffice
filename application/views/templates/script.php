@@ -199,6 +199,7 @@
   </script>
 
 <!-- untuk check messages -->
+<?php if ($this->session->userdata('role') == 'user') : ?>
 <script>
     var message_now = 0;
     $(document).ready(function() {
@@ -206,17 +207,17 @@
         var badges_notif =  document.getElementById("badges_notif");
         setInterval(function(){
               $.ajax({
-                  url:"<?php echo base_url();?>index.php/MessageControl/get_message",
+                  url:"<?php echo base_url();?>index.php/UserAutomationControl/get_message",
                   dataType : 'json',
                   success:function(data){
                       if (data != 0 && data != message_now){ //ada pesan masuk
                           console.log(data);
                           $.ajax({
-                              url:"<?php echo base_url();?>index.php/MessageControl/get_last_message",
+                              url:"<?php echo base_url();?>index.php/UserAutomationControl/get_last_message",
                               dataType : 'json',
                               success:function(data1){
                                   $.each(data1, function(key,val){
-                                    var u_from = val.u_from;
+                                    var u_from = val.name;
                                     showNotification('top','right', u_from);
                                   });
                               }
@@ -235,7 +236,7 @@
 
           //for checking whenever user is operating the website so that their last_login_status will change
           $.ajax({
-              url:"<?php echo base_url();?>index.php/MessageControl/change_last_user_status",
+              url:"<?php echo base_url();?>index.php/UserAutomationControl/change_last_user_status",
               dataType : 'json',
               success:function(data){
                   console.log('online');
@@ -261,3 +262,4 @@
         });
     }
   </script>
+  <?php endif; ?>

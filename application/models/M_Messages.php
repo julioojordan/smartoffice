@@ -1,15 +1,15 @@
 <?php
 class M_Messages extends CI_Model
 {
-	function checkMessage($u_to, $email, $status)
+	function checkMessage($u_to, $u_from, $status)
 	{
-		return $this->db->query("SELECT * FROM messages WHERE u_from ='$email' AND message = $status AND u_to ='$u_to'")->num_rows();
+		return $this->db->query("SELECT * FROM messages WHERE u_from ='$u_from' AND message = $status AND u_to ='$u_to'")->num_rows();
 		
     }
     
-    function getMessage($email, $status)
+    function getMessage($u_from, $status)
 	{
-		return $this->db->query("SELECT * FROM messages WHERE u_from ='$email' AND message = $status ORDER BY time DESC LIMIT 1")->row_array();
+		return $this->db->query("SELECT * FROM messages WHERE u_from ='$u_from' AND message = $status ORDER BY time DESC LIMIT 1")->row_array();
 		
     }
     
@@ -20,32 +20,48 @@ class M_Messages extends CI_Model
 		
 	}
 	
-    function countUnreplied($email)
+    function countUnreplied($u_to)
 	{
-		return $this->db->query("SELECT * FROM messages WHERE u_to ='$email' AND reply_status = 0")->num_rows();
+		return $this->db->query("SELECT * FROM messages WHERE u_to ='$u_to' AND reply_status = 0")->num_rows();
 		
     }
 
-    function getUnrepliedLast($email)
+    function getUnrepliedLast($u_to)
 	{
-		return $this->db->query("SELECT * FROM messages WHERE u_to ='$email' AND reply_status = 0 ORDER BY time DESC LIMIT 1")->result();
+		return $this->db->query("SELECT * FROM messages
+		JOIN user ON messages.u_from = user.user_id
+		WHERE u_to ='$u_to' AND reply_status = 0 ORDER BY time DESC LIMIT 1")->result();
 		
 	}
 	
-	function getUnreplied($email, $message, $reply_status)
+	function getUnreplied($u_to, $message, $reply_status)
 	{
 		$query = $this->db->query("SELECT * FROM messages 
-		JOIN user ON messages.u_from = user.email
-		WHERE u_to ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		JOIN user ON messages.u_from = user.user_id
+		WHERE u_to ='$u_to' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		return $query;
+	}
+
+	function getUnrepliedServer()
+	{
+		$query = $this->db->query("SELECT * FROM messages WHERE reply_status = 0 AND message = 1 ORDER BY time DESC");
 		return $query;
 	}
 
 	//access request
-	function getUnrepliedRequest($email, $message, $reply_status)
+	function getUnrepliedRequest($u_from, $message, $reply_status)
 	{
 		$query = $this->db->query("SELECT * FROM messages 
-		JOIN user ON messages.u_from = user.email
-		WHERE u_from ='$email' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		JOIN user ON messages.u_from = user.user_id
+		WHERE u_from ='$u_from' AND reply_status = '$reply_status' AND message = '$message' ORDER BY time DESC");
+		return $query;
+	}
+
+	function getReplied($u_to, $reply_status)
+	{
+		$query = $this->db->query("SELECT * FROM messages 
+		JOIN user ON messages.u_from = user.user_id
+		WHERE u_to ='$u_to' AND reply_status = '$reply_status' ORDER BY time DESC LIMIT 10");
 		return $query;
 	}
 	
@@ -64,11 +80,11 @@ class M_Messages extends CI_Model
 		$this->db->query("UPDATE messages SET message= $message, reply_status = $reply_status WHERE id ='$id'");
 	}
 	
-	function searchMessages($keyword, $email, $message, $reply_status)
+	function searchMessages($keyword, $u_to, $message, $reply_status)
 	{
 		$query = $this->db->query("SELECT * FROM messages 
-		JOIN user ON messages.u_from = user.email
-		WHERE (u_from LIKE '%$keyword%' OR user.name LIKE '%$keyword%') AND (u_to ='$email' AND reply_status = '$reply_status' AND message = '$message') ORDER BY time DESC");
+		JOIN user ON messages.u_from = user.user_id
+		WHERE (u_from LIKE '%$keyword%' OR user.name LIKE '%$keyword%') AND (u_to ='$u_to' AND reply_status = '$reply_status' AND message = '$message') ORDER BY time DESC");
 		return $query;
 		
 	}

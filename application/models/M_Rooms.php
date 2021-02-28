@@ -1,9 +1,9 @@
 <?php
 class M_Rooms extends CI_Model
 {
-	function getRoom($email)
+	function getRoom($user_id)
 	{
-		return $this->db->query("SELECT * FROM rooms WHERE owner='$email'")->row_array();
+		return $this->db->query("SELECT * FROM rooms WHERE owner='$user_id'")->row_array();
 		
 	}
 	
@@ -13,24 +13,24 @@ class M_Rooms extends CI_Model
 		
 	}
 	
-	function getAllRooms($email)
+	function getAllRooms($user_id)
 	{
 		return $this->db->query("SELECT * FROM rooms
-		JOIN user ON rooms.owner = user.email WHERE owner<>'$email' ORDER BY user.status1 DESC, rooms.room_id ASC")->result_array();
+		JOIN user ON rooms.owner = user.user_id WHERE owner<>'$user_id' ORDER BY user.status1 DESC, rooms.room_id ASC")->result_array();
 		
 	}
 
 	//for auto
-	function getAllRooms1($email)
+	function getAllRooms1($user_id)
 	{
 		return $this->db->query("SELECT * FROM rooms 
-		JOIN user ON rooms.owner = user.email WHERE owner<>'$email' ORDER BY user.status1 DESC, rooms.room_id ASC")->result();
+		JOIN user ON rooms.owner = user.user_id WHERE owner<>'$user_id' ORDER BY user.status1 DESC, rooms.room_id ASC")->result();
 		
 	}
 	
-	function searchRoom($keyword, $email)
+	function searchRoom($keyword, $user_id)
 	{
-		$query = $this->db->query("SELECT * FROM rooms JOIN user ON rooms.owner = user.email WHERE (room_id = '$keyword' OR user.name LIKE '%$keyword%') AND owner<>'$email' ORDER BY user.status1 DESC, rooms.room_id ASC");
+		$query = $this->db->query("SELECT * FROM rooms JOIN user ON rooms.owner = user.user_id WHERE (room_id = '$keyword' OR user.name LIKE '%$keyword%') AND owner<>'$user_id' ORDER BY user.status1 DESC, rooms.room_id ASC");
 		return $query;
 		
 	}
@@ -38,6 +38,11 @@ class M_Rooms extends CI_Model
 	function getAllRooms2()
 	{
 		return $this->db->query("SELECT * FROM rooms ORDER BY room_id ASC ")->result_array();
+	}
+
+	function getAllType()
+	{
+		return $this->db->query("SELECT * FROM room_type");
 	}
 
 }

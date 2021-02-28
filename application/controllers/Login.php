@@ -28,6 +28,7 @@ class Login extends CI_Controller {
 		
 		$auth=$this->m_login->auth($email,$password);
 		$auth_server=$this->m_server->auth($email,$password);
+		$auth_admin=$this->m_login->auth_admin($email,$password);
 
 		//check wheter there is on server or not
 		$check_server= $this->m_server->getOnServer();
@@ -42,15 +43,16 @@ class Login extends CI_Controller {
 		}else{
 			if($check_server->num_rows()!= 0){
 				if($auth->num_rows()!= 0){
-					$this->m_login->update_status($email,$password, 1, $now);
+					$this->m_login->update_status($email,$password, 2, $now);
 					$data=$this->m_login->auth($email,$password)->row_array();
 					$name=$data['name'];
 					$email=$data['email'];
 					$status=$data['status1'];
 					$user_id=$data['user_id'];
 					$room_type=$data['room_type'];
-					$room_id = $this->m_rooms->getRoom($email);
+					$room_id = $this->m_rooms->getRoom($user_id);
 					$room_id = $room_id['room_id'];
+					$this->session->set_userdata('role', 'user');
 					$this->session->set_userdata('login', true);
 					$this->session->set_userdata('name', $name);
 					$this->session->set_userdata('email', $email);
@@ -58,8 +60,16 @@ class Login extends CI_Controller {
 					$this->session->set_userdata('room_id', $room_id);
 					$this->session->set_userdata('room_type', $room_type);
 					$this->session->set_userdata('status', $status);
-					$data = "success";
-				}else{
+					$data = "user";
+				}
+				elseif($auth_admin->num_rows()!= 0){
+					$data=$this->m_login->auth_admin($email,$password)->row_array();
+					$this->session->set_userdata('role', 'admin');
+					$this->session->set_userdata('login', true);
+					$this->session->set_userdata('name', $data['id']);
+					$data = "admin";
+				}
+				else{
 					$data = "failed";
 				}
 			}else{
@@ -72,23 +82,23 @@ class Login extends CI_Controller {
 
 	}
 
-	public function register()
-	{
-		$this->load->model('m_signup');
-		$name=htmlspecialchars($this->input->post('fullname',TRUE),ENT_QUOTES);
-		$email=htmlspecialchars($this->input->post('email',TRUE),ENT_QUOTES);
-		$password=htmlspecialchars($this->input->post('password',TRUE),ENT_QUOTES);
+	// public function register()
+	// {
+	// 	$this->load->model('m_signup');
+	// 	$name=htmlspecialchars($this->input->post('fullname',TRUE),ENT_QUOTES);
+	// 	$email=htmlspecialchars($this->input->post('email',TRUE),ENT_QUOTES);
+	// 	$password=htmlspecialchars($this->input->post('password',TRUE),ENT_QUOTES);
 		
-		$check=$this->m_signup->check_email($email);
+	// 	$check=$this->m_signup->check_email($email);
 
-		if($check->num_rows()!= 0){
-			$data = false;
-		}else{
-			$this->m_signup->add_user($name, $email, $password);
-			$this->session->set_flashdata('done', 'done');
-			$data = true;
-		}
+	// 	if($check->num_rows()!= 0){
+	// 		$data = false;
+	// 	}else{
+	// 		$this->m_signup->add_user($name, $email, $password);
+	// 		$this->session->set_flashdata('done', 'done');
+	// 		$data = true;
+	// 	}
 
-		echo json_encode($data);
-	}
+	// 	echo json_encode($data);
+	// }
 }

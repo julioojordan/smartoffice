@@ -16,12 +16,13 @@ class ServerControl extends CI_Controller {
       $this->load->model('m_log');
       $this->load->model('m_devices');
       $this->load->model('m_rooms');
+      $this->load->model('m_messages');
   }
     
     
   public function index()
 	{	
-		  $this->load->view('server');
+		  $this->load->view('v_server');
   }
     
     public function stop()
@@ -45,8 +46,8 @@ class ServerControl extends CI_Controller {
             $time = strtotime($time) + 600; //if in 10 minutes user not doing anything then their status1 will be chenged to idle / 1, status 2 will set to be Not in The room
             $time = date('Y-m-d H:i:s', $time);
             if($now > $time){//
-                $this->m_user->updateStatus1User($row['email']);
-                if($this->m_user->updateStatus1User($row['email'])){
+                $this->m_user->updateStatus1User($row['user_id']);
+                if($this->m_user->updateStatus1User($row['user_id'])){
                   $data = true;
                 }else{
                   $data = "updated";
@@ -70,8 +71,8 @@ class ServerControl extends CI_Controller {
             $time = strtotime($time) + 3600; //if in 1 hours user not doing anything then their status1 will be chenged to offline / 0
             $time = date('Y-m-d H:i:s', $time);
             if($now > $time){//
-                $this->m_user->updateStatus1User2($row['email']);
-                if($this->m_user->updateStatus1User2($row['email'])){
+                $this->m_user->updateStatus1User2($row['user_id']);
+                if($this->m_user->updateStatus1User2($row['user_id'])){
                   $data = true;
                 }else{
                   $data = "updated";
@@ -133,7 +134,7 @@ class ServerControl extends CI_Controller {
           $time = $row['valid'];
           if($now > $time){
               $this->m_token->updateStatusToken($row['no']);
-                if($this->m_user->updateStatus1User($row['no'])){
+                if($this->m_user->updateStatusToken($row['no'])){
                   $data = true;
                 }else{
                   $data = "updated";
@@ -165,5 +166,25 @@ class ServerControl extends CI_Controller {
         $data = "updated";
         echo json_encode($data);
     }
+
+    public function automation_message(){
+
+      $check = $this->m_messages->getUnrepliedServer()->result_array();
+      if ( function_exists( 'date_default_timezone_set' ) ){
+            date_default_timezone_set('Asia/Jakarta');
+            $now = date("Y-m-d H:i:s");
+      }
+      foreach($check as $row ){
+          $time = $row['time'];
+          $time = strtotime($time) + 600;  //if in 10 minutes not replied then the message will be auto declined
+          $time = date('Y-m-d H:i:', $time);
+          if($now > $time){// reqeust with older time will be updated to decline nad status to reply
+              $this->m_messages->updateUnreplied($row['id'], 3, 1);
+          }
+      }
+      $data = "update messages";
+      echo json_encode($data);
+
+  }
 
 }

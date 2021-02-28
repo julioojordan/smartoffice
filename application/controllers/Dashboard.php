@@ -30,7 +30,7 @@ class Dashboard extends CI_Controller {
 		$data['access_class'] = "";
 		$data['location'] = "Dashboard";
 
-		$data['devices'] = $this->m_devices->getDevice($this->session->userdata('email'));
+		$data['devices'] = $this->m_devices->getDevice($this->session->userdata('user_id'));
 		
 		$this->load->view('v_dashboard', $data);
 	}
@@ -45,7 +45,7 @@ class Dashboard extends CI_Controller {
     		date_default_timezone_set('Asia/Jakarta');
 			$time = date("Y-m-d H:i:s");
 		}
-		$user = $this->session->userdata('email');
+		$user = $this->session->userdata('user_id');
 
 		//inserting log table except for device type = lock
 		if($device != 'lock'){
@@ -57,7 +57,7 @@ class Dashboard extends CI_Controller {
 		}
 
 		//update last status user so that they're not recognized as idle by server
-		$this->m_user->updateStatus1User1($this->session->userdata('email'), $time);
+		$this->m_user->updateStatus1User1($this->session->userdata('user_id'), $time);
 
 		echo json_encode($data);
 		
@@ -84,8 +84,8 @@ class Dashboard extends CI_Controller {
 
 	public function auto_access(){
 		//your access to other's rooms
-		if($this->m_token->getAccess($this->session->userdata('email'), 1)->num_rows() != 0){
-			$data = $this->m_token->getAccess($this->session->userdata('email'), 1)->result_array();
+		if($this->m_token->getAccess($this->session->userdata('user_id'), 1)->num_rows() != 0){
+			$data = $this->m_token->getAccess($this->session->userdata('user_id'), 1)->result_array();
 		}else{//no access to other's rooms
 			$data = false;
 		}

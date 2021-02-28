@@ -59,7 +59,7 @@ class User extends CI_Controller {
             //update user information & room information
             $this->m_user->updateUser($this->session->userdata('user_id'), $email, $name, $this->session->userdata('room_type'));
 
-            $room_id = $this->m_rooms->getRoom($email);
+            $room_id = $this->m_rooms->getRoom($this->session->userdata('user_id'));
             $room_id = $room_id['room_id'];
             
             //registering devices

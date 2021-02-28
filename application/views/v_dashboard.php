@@ -194,7 +194,7 @@
                     table_body_guest.innerHTML = "";
                     var i = 1;
                     $.each(data, function(key,val){
-                      table_body_guest.innerHTML += "<tr><td style='text-align:center;'>"+i+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'>"+val.user_email+"</td></tr>";
+                      table_body_guest.innerHTML += "<tr><td style='text-align:center;'>"+i+"</td><td style='text-align:center;'>"+val.user_id+"</td><td style='text-align:center;'>"+val.name+"</td><td style='text-align:center;'>"+val.email+"</td></tr>";
                       i++ ;
                     });
                 }
