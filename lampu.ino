@@ -5,7 +5,7 @@
 const char* ssid     = "POCOPHONE";
 const char* password = "tanyaaku";
 
-String user_id = "1"; //user id
+String user_id = "2"; //user id
 
 const char* host = "192.168.100.231";
 //"192.168.42.14"
@@ -14,7 +14,7 @@ const char* host = "192.168.100.231";
 WiFiClient client;
 StaticJsonDocument<1000> doc1;
 StaticJsonDocument<3000> doc2;
-const int httpPort = 80;
+const int httpPort = 80; int count_lock = 0;
 String url, room_id;
 String lock, lamp, fan, lamp2, fan2, lamp3, fan3;
 String status_user = "0";
@@ -113,6 +113,7 @@ void loop() {
           Serial.println("last_status_lock : " +last_status_lock);
           Serial.println("room_id : " +room_id);
           room_type = doc1["room_type"].as<String>();
+          Serial.println("room_type : " +room_type);
 
           if(room_type == "R1"){ //Registing pin for Normal room
               //pin for lamp
@@ -121,10 +122,10 @@ void loop() {
             
               //pin for lock
               pinMode(13, OUTPUT); //D7
-              digitalWrite(13, HIGH);
+              digitalWrite(13, LOW);
             
               //pin for fan
-              pinMode(4, OUTPUT); //D2
+              pinMode(0, OUTPUT); //D3
               digitalWrite(4, HIGH);
             
               //pin for PIR sensor
@@ -138,7 +139,7 @@ void loop() {
               
               //pin for lock
               pinMode(13, OUTPUT); //D7
-              digitalWrite(13, HIGH);
+              digitalWrite(13, LOW);
             
               //pin for fan
               pinMode(0, OUTPUT); //D3
@@ -160,7 +161,7 @@ void loop() {
               
               //pin for lock
               pinMode(13, OUTPUT); //D7
-              digitalWrite(13, HIGH);
+              digitalWrite(13, LOW);
             
               //pin for fan
               pinMode(0, OUTPUT); //D3
@@ -204,9 +205,13 @@ void loop() {
       //check if lock still unlocked and then lock it again after 3 s
       if (last_status_lock != status_lock){
         //lock still open, unlock it
-        delay(3000);
-        digitalWrite(13,HIGH); //lock it
-        status_lock = last_status_lock;
+        count_lock++;
+        if (count_lock == 8){ // already 1750 ms
+          digitalWrite(13,LOW); //lock it
+          status_lock = last_status_lock;
+          count_lock = 0;
+        }
+        
       }
       Serial.print("connecting to ");
       Serial.println(host);
@@ -293,7 +298,7 @@ void loop() {
       //turn on/off device here
       if(room_type == "R1") {
         if (lock != last_status_lock){
-          digitalWrite(13,LOW);    //lampu off
+          digitalWrite(13,HIGH);    //Unlocked
           Serial.println("Unlocked");
           last_status_lock = lock;
         }
@@ -307,15 +312,15 @@ void loop() {
         }
   
         if (fan == "1") {
-          digitalWrite(4,HIGH);
+          digitalWrite(0,LOW);
           Serial.println("Fan ON");
         }else{
-          digitalWrite(4,LOW);
+          digitalWrite(0,HIGH);
           Serial.println("Fan OFF");
         }
       }else if (room_type == "R2"){
         if (lock != last_status_lock){
-          digitalWrite(13,LOW);    //lampu off
+          digitalWrite(13,HIGH);    //YUnlocked
           Serial.println("Unlocked");
           last_status_lock = lock;
         }
@@ -337,23 +342,23 @@ void loop() {
         }
   
         if (fan == "1") {
-          digitalWrite(0,HIGH);
+          digitalWrite(0,LOW);
           Serial.println("Fan 1 ON");
         }else{
-          digitalWrite(0,LOW);
+          digitalWrite(0,HIGH);
           Serial.println("Fan 1 OFF");
         }
 
         if (fan2 == "1") {
-          digitalWrite(2,HIGH);
+          digitalWrite(2,LOW);
           Serial.println("Fan 2 ON");
         }else{
-          digitalWrite(2,LOW);
+          digitalWrite(2,HIGH);
           Serial.println("Fan 2 OFF");
         }
       }else if (room_type == "H1"){
         if (lock != last_status_lock){
-          digitalWrite(13,LOW);    //lampu off
+          digitalWrite(13,HIGH);    //Unlocked
           Serial.println("Unlocked");
           last_status_lock = lock;
         }
@@ -383,32 +388,33 @@ void loop() {
         }
   
         if (fan == "1") {
-          digitalWrite(0,HIGH);
+          digitalWrite(0,LOW);
           Serial.println("Fan 1 ON");
         }else{
-          digitalWrite(0,LOW);
+          digitalWrite(0,HIGH);
           Serial.println("Fan 1 OFF");
         }
 
         if (fan2 == "1") {
-          digitalWrite(2,HIGH);
+          digitalWrite(2,LOW);
           Serial.println("Fan 2 ON");
         }else{
-          digitalWrite(2,LOW);
+          digitalWrite(2,HIGH);
           Serial.println("Fan 2 OFF");
         }
 
         if (fan3 == "1") {
-          digitalWrite(14,HIGH);
+          digitalWrite(14,LOW);
           Serial.println("Fan 3 ON");
         }else{
-          digitalWrite(14,LOW);
+          digitalWrite(14,HIGH);
           Serial.println("Fan 3 OFF");
         }
       }
       Serial.println();
       Serial.println("closing connection");
       Serial.println();
+      delay(250);
     }else{
       Serial.println("Please Register Your Account First!");
       return;
