@@ -12,7 +12,7 @@ class Microcontroller extends CI_Controller {
         $status_user = $this->input->get('status_user');// for checking if owner is in the room or not
 
         if ($status_user == "1"){ // user in the room
-            $this->m_microcontroller->setUserStatus($user_id, "In The Room");
+            $this->m_microcontroller->setUserStatus($user_id, 1);
         }
 
         $data = $this->m_microcontroller->getDevicesStatus($room_id);

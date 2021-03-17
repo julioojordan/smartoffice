@@ -10,7 +10,7 @@ class M_signup extends CI_Model
     function add_user($name, $email, $password)
 	{
 		$this->db->query("INSERT INTO user (name, email, password, status1, status2)
-        VALUES ('$name', '$email', '$password', 0, 'Not In The Room')");
+        VALUES ('$name', '$email', '$password', 0, 0)");
 	}
 
 }

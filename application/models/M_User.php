@@ -13,7 +13,7 @@ class M_User extends CI_Model
     
     function updateStatus1User($id)
 	{
-		$this->db->query("UPDATE user SET status1 = 1, status2 = 'Not In The Room' WHERE user_id ='$id'");
+		$this->db->query("UPDATE user SET status1 = 1, status2 = 0 WHERE user_id ='$id'");
 	}
 
 	function updateStatus1User2($id)
