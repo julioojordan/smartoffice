@@ -10,7 +10,8 @@ class Dashboard extends CI_Controller {
         $url=base_url();
         redirect($url);
 	  }
-
+	  
+	//   DANIS WAS HERE
 	  if($this->session->userdata('email') == NULL){ // if User havent registered their email
         redirect('User');
 	  }
