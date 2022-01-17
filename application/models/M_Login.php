@@ -12,9 +12,9 @@ class M_login extends CI_Model
 		$this->db->query("UPDATE user SET status1 = $status1, last_login_time = '$time' WHERE (email = '$email' OR user_id = '$email') and password = '$password'");
 	}
 
-	function update_status_off($email)
+	function update_status_off($user_id)
 	{
-		$this->db->query("UPDATE user SET status1 = 0 WHERE email = '$email'");
+		$this->db->query("UPDATE user SET status1 = 0 WHERE user_id = '$user_id'");
 	}
 
 	function auth_admin($id, $password)

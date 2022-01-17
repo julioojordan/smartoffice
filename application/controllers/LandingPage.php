@@ -8,8 +8,4 @@ class LandingPage extends CI_Controller {
 		$this->load->view('v_landing_page');
 	}
 
-    public function elements()
-	{
-		$this->load->view('elements');
-	}
 }

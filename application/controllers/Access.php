@@ -54,7 +54,14 @@ class Access extends CI_Controller {
 		// get expiration time
 		$data['expired'] = $this->m_token->getToken($token)->row_array();
 		$data['expired'] = $data['expired']['valid'];
-        $this->load->view('v_guest', $data);
+		$data['guest_id'] = $data['expired']['user'];
+
+		if($data['guest_id'] != $this->session->userdata('user_id')){
+			redirect('Dashboard');
+		}else{
+			$this->load->view('v_guest', $data);
+		}
+        
     }
 
     public function device()

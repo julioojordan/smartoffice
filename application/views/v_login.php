@@ -116,7 +116,7 @@
 							icon: 'error',
 							title: 'Oops..',
 							text: 'Account Not Found !',
-							footer: '<a href="<?php echo base_url() . 'Login/signup' ?>"> Sign Up Now !</a>'
+							//footer: '<a href="<?php echo base_url() . 'Login/signup' ?>"> Sign Up Now !</a>'
 						});
                     }else if(data=='server_on'){
 						window.location.href = "<?php echo base_url();?>ServerControl";

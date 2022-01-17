@@ -105,6 +105,7 @@
           $(this).addClass('active');
 
           var new_color = $(this).data('color');
+          console.log(new_color);
 
           if ($sidebar.length != 0) {
             $sidebar.attr('data', new_color);

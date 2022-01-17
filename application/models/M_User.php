@@ -18,7 +18,7 @@ class M_User extends CI_Model
 
 	function updateStatus1User2($id)
 	{
-		$this->db->query("UPDATE user SET status1 = 0 WHERE user_id ='$id'");
+		$this->db->query("UPDATE user SET status1 = 0, status2 = 0 WHERE user_id ='$id'");
 	}
 	
 	//when user clicking a device button or menu button in website

@@ -55,7 +55,6 @@ class ServerControl extends CI_Controller {
             }
         }
 
-        echo json_encode($data);
     }
 
     public function user_offline()
@@ -79,8 +78,6 @@ class ServerControl extends CI_Controller {
                 }
             }
         }
-
-        echo json_encode($data);
     }
 
     public function device_status()
@@ -118,8 +115,6 @@ class ServerControl extends CI_Controller {
                 }
             }
         }
-
-        echo json_encode($data);
     }
 
     public function token_status()
@@ -141,7 +136,6 @@ class ServerControl extends CI_Controller {
                 }
           }
         }
-        echo json_encode($data);
     }
 
     public function automation_status()

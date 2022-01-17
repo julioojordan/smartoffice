@@ -2,14 +2,13 @@
 #include <ArduinoJson.h>
 #include <cstddef>
 
-const char* ssid     = "POCOPHONE";
-const char* password = "tanyaaku";
+const char* ssid     = "POCOPHONE"; //wifi 
+const char* password = "tanyaaku"; // wifi password
 
 String user_id = "2"; //user id
 
 const char* host = "192.168.100.231";
-//"192.168.42.14"
-//"192.168.43.247" pas di laptop jorghi pake wifi hp
+//"192.168.42.14" -> sesuaikan ip host
 
 WiFiClient client;
 StaticJsonDocument<1000> doc1;
